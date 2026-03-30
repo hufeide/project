@@ -1,12 +1,13 @@
 import os
+from dotenv import load_dotenv
 from openai import OpenAI
 import json
 import base64
 import io
 import imghdr
 from openai import APIConnectionError, APIStatusError, RateLimitError
-os.environ['http_proxy'] = 'http://172.16.50.213:7890'
-os.environ['https_proxy'] = 'http://172.16.50.213:7890'
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
 
 # ⚠️ 警告：请将 YOUR_OPENAI_API_KEY_HERE 替换为您自己的实际 API Key。
 # 这种做法存在安全风险，请确保妥善保管您的密钥！

@@ -9,14 +9,55 @@ from .modle_utils import get_chat_response, get_chat_response_vLLM
 from .image_utils import save_image_path
 from .json_validation import validate_single_json_string, is_list_of_list
 
-from core.config import (
-    VLLM_CLIENTS,
-    ARK_CLIENT,
-    ARK_MODELS,
-    ARK_DEFAULT_PARAMS,
-    VLLM_DEFAULT_PARAMS,
-    IMAGE_SAVE_DIR,
+import os
+
+from dotenv import load_dotenv
+from openai import AsyncOpenAI
+from volcenginesdkarkruntime import Ark
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+ENV_PATH = os.path.join(PROJECT_ROOT, ".env")
+
+load_dotenv(ENV_PATH)
+
+VLLM_CLIENTS = {
+    "client1": AsyncOpenAI(
+        api_key=os.getenv("VLLM_CLIENT1_API_KEY", ""),
+        base_url=os.getenv("VLLM_CLIENT1_BASE_URL", "http://192.168.1.210:19000/v1"),
+    ),
+    "client2": AsyncOpenAI(
+        api_key=os.getenv("VLLM_CLIENT2_API_KEY", ""),
+        base_url=os.getenv("VLLM_CLIENT2_BASE_URL", "http://192.168.1.159:21000/v1"),
+    ),
+}
+
+ARK_CLIENT = Ark(
+    base_url=os.getenv("ARK_BASE_URL", "https://ark.cn-beijing.volces.com/api/v3"),
+    api_key=os.getenv("ARK_API_KEY", ""),
 )
+
+ARK_MODELS = {
+    "deepseek": os.getenv("ARK_MODEL_DEEPSEEK", "deepseek-v3-2-251201"),
+    "doubao": os.getenv("ARK_MODEL_DOUBAO", "doubao-seed-1-6-250615"),
+}
+
+ARK_DEFAULT_PARAMS = {
+    "temperature": float(os.getenv("ARK_TEMPERATURE", "0.1")),
+    "max_tokens": int(os.getenv("ARK_MAX_TOKENS", "30000")),
+    "thinking": {"type": "enabled"},
+}
+
+VLLM_DEFAULT_PARAMS = {
+    "temperature": float(os.getenv("VLLM_TEMPERATURE", "0.7")),
+    "max_tokens": int(os.getenv("VLLM_MAX_TOKENS", "80000")),
+}
+
+IMAGE_SAVE_DIR = os.getenv(
+    "IMAGE_SAVE_DIR",
+    os.path.join(PROJECT_ROOT, "难易度", "gradio_me", "png"),
+)
+
 
 client1 = VLLM_CLIENTS["client1"]
 client2 = VLLM_CLIENTS["client2"]
@@ -40,7 +81,7 @@ class KnowledgeEnhancedQA_list:
         return await asyncio.gather(*tasks, return_exceptions=True)
 
     async def Batch_is_easy_pre_numList_async(self, processed_data):
-        if processed_data['task'] == 'answer_analysis':
+        if processed_data['task'] in ['answer_knowledge','answer_correct', 'answer_analysis','answer_difficulty']:
             sys_prompt, prompt = prompt_answer_analysis(processed_data)
         else:
             raise ValueError(f"Unknown task type: {processed_data['task']}")
@@ -111,10 +152,6 @@ class KnowledgeEnhancedQA_list:
                     **VLLM_DEFAULT_PARAMS,
                 )
                 resp = response.choices[0].message.content
-
-                if " \u2764\ufe0f" in resp:
-                    resp = resp.split(" \u2764\ufe0f", 1)[1].strip()
-
             except Exception as e:
                 print(f"vLLM 调用失败: {e}")
                 resp = ""

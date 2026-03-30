@@ -80,12 +80,17 @@ def is_valid_base64_image(encoded_image):
         return False
 
 
-def prepare_base64_image(base64_string):
-    """
-    预处理 base64 字符串，确保格式正确
-    """
-    if base64_string.startswith('data:image/'):
-        if ',' in base64_string:
-            base64_string = base64_string.split(',')[1]
+def build_image_instruction(imgs):
+    lines = []
+    img_idx = 1
 
-    return base64_string
+    for q_idx, group in enumerate(imgs, start=1):
+        if not group:
+            lines.append(f"第{q_idx}题：无图片")
+        else:
+            indices = list(range(img_idx, img_idx + len(group)))
+            lines.append(
+                f"第{q_idx}题：只能使用图片 {indices}"
+            )
+            img_idx += len(group)
+    return "\n".join(lines)

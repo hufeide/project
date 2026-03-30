@@ -1,7 +1,7 @@
 
 from typing import Any
 from .json_validation import  is_list_of_list
-from .prompt_utils import build_image_instruction
+from .image_utils import build_image_instruction
 
 def prompt_answer_analysis(processed_data):
     knowledge_text = processed_data['knowledge']

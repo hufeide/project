@@ -4,6 +4,29 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 from .image_utils import extract_image_from_html
+import json
+import os
+import pickle
+
+
+def pkl_json(pkl_path, json_path):
+    output_path = json_path
+
+    def convert_set_to_list(obj):
+        if isinstance(obj, set):
+            return list(obj)
+        elif isinstance(obj, dict):
+            return {k: convert_set_to_list(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_set_to_list(v) for v in obj]
+        else:
+            return obj
+
+    with open(pkl_path, 'rb') as f:
+        all_results_m = pickle.load(f)
+    safe_results = convert_set_to_list(all_results_m)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(safe_results, f, ensure_ascii=False, indent=4)
 
 
 def clean_html_text(html_content, start_num=1):
@@ -88,56 +111,4 @@ def extract_question_content(material_html, question_full_html, answer_html):
     }
 
 
-def universal_question_extractor(cleaned_text):
-    """
-    通用题目解析方法：按文本结构提取内容
-    避开【图片n】这种占位符，只对真正的业务模块标识进行分割
-    """
-    extracted_content = []
 
-    split_pattern = r'(【(?!图片).*?】)'
-
-    if not re.search(split_pattern, cleaned_text):
-        blocks = [("【题干/答案】", cleaned_text)]
-    else:
-        content_blocks = re.split(split_pattern, cleaned_text)
-
-        blocks = []
-        if content_blocks[0].strip():
-            blocks.append(("【题干/答案】", content_blocks[0].strip()))
-
-        for i in range(1, len(content_blocks), 2):
-            if i + 1 < len(content_blocks):
-                tag = content_blocks[i].strip()
-                content = content_blocks[i + 1].strip()
-                if tag and content:
-                    blocks.append((tag, content))
-
-    for tag, content in blocks:
-        lines = [line.strip() for line in content.split('\n') if line.strip()]
-        if lines:
-            cleaned_content = '\n'.join(lines)
-            block_result = f"{tag}\n{cleaned_content}"
-            extracted_content.append(block_result)
-
-    return extracted_content if extracted_content else ["未提取到有效题目内容"]
-
-
-def write_results_to_file(extracted_content, output_file_path):
-    """将提取结果写入txt文件"""
-    try:
-        with open(output_file_path, 'w', encoding='utf-8') as f:
-            for i, content in enumerate(extracted_content):
-                if i > 0:
-                    f.write('\n\n')
-                f.write(content)
-        print(f"结果已成功写入文件: {output_file_path}")
-    except Exception as e:
-        print(f"写入文件失败: {str(e)}")
-
-
-def clean_text(text):
-    """清理文本中的多余空格和特殊字符"""
-    text = re.sub(r'\s+', ' ', text)
-    text = re.sub(r'[^\w\s\u4e00-\u9fff.,!?;:()\-]', '', text)
-    return text.strip()

@@ -58,10 +58,8 @@ IMAGE_SAVE_DIR = os.getenv(
     os.path.join(PROJECT_ROOT, "难易度", "gradio_me", "png"),
 )
 
-
 client1 = VLLM_CLIENTS["client1"]
 client2 = VLLM_CLIENTS["client2"]
-
 
 class KnowledgeEnhancedQA_list:
     def __init__(self):

@@ -25,6 +25,8 @@ from utils import (
     extract_question_content,
     is_valid_base64_image,
     pkl_json,
+    qa_system,  # 使用新的统一推理器
+    list_available_tasks,  # 查看支持的任务
 )
 from utils.logger import get_logger
 
@@ -36,9 +38,14 @@ our_subject = {"语文"}
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # ================= 全局资源 =================
-qa_system = KnowledgeEnhancedQA_list()
+# 使用新的统一推理器
+qa_system = qa_system
 
 def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
+    """
+    等价于原 Flask 接口 /difficulty_jud
+    使用新的统一架构
+    """
     logger.info(f"Received {task} request")
 
     all_question = []
@@ -94,7 +101,7 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
             'promote_head': answer_system,
             'promote_out': answer_type_prompt_one,
             'answer_example': answer_type_example_one,
-            'task': task,
+            'task': task,  # 关键：指定任务类型
             'image_list': images_list,
             'required_keys': required_keys,
         }
@@ -118,6 +125,7 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
                     continue
 
             try:
+                # 使用新的统一推理器
                 all_results = qa_system.batch_inference([item], max_workers=10)
                 all_results_m = all_results[0] | item
 
@@ -146,6 +154,10 @@ class knowledge_md:
             return ""
 
 if __name__ == "__main__":
+    # 测试新的统一架构
+    print("=== 支持的任务类型 ===")
+    print(list_available_tasks())
+    
     file_path = '/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/难易度/global/ai_model_apply_py/data/260323_chinese_json.json'
 
     def load_and_process_dfjg(file_path):
@@ -192,8 +204,6 @@ if __name__ == "__main__":
     data = df.to_dict(orient='records')
 
     PROMPT_DIR = os.path.join(BASE_DIR, "data/prompt_file/")
-
-
 
     def load_prompt(file_name):
         file_path = os.path.join(PROMPT_DIR, file_name)

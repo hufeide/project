@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+
+# 模型
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# 数据
+data/
+dataset/
+outputs/
+logs/
+
+# 环境
+.env
+.venv/
+
+# IDE
+.vscode/
+.idea/data/

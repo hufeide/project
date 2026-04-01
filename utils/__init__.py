@@ -23,9 +23,7 @@ from .unified_inference import (
     UnifiedModelInference,
     TaskConfig,
     BaseTaskProcessor,
-    AnswerAnalysisProcessor,
-    KnowledgeJudgmentProcessor,
-    AnswerComparisonProcessor,
+    Processor,
     unified_inference,
     qa_system,
 )

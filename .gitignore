@@ -10,6 +10,8 @@ __pycache__/
 
 # 数据
 data/
+check/
+bei/
 dataset/
 outputs/
 logs/

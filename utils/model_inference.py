@@ -55,7 +55,7 @@ VLLM_DEFAULT_PARAMS = {
 
 IMAGE_SAVE_DIR = os.getenv(
     "IMAGE_SAVE_DIR",
-    os.path.join(PROJECT_ROOT, "难易度", "gradio_me", "png"),
+    os.path.join(PROJECT_ROOT, "data", "png"),
 )
 
 client1 = VLLM_CLIENTS["client1"]

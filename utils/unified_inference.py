@@ -5,18 +5,20 @@
 import asyncio
 import os
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Callable, Optional
+from typing import Dict, Any, List, Callable, Optional, Tuple
 from dataclasses import dataclass
-
-from .json_validation import validate_single_json_string, is_list_of_list
+import json
+from .json_validation import validate_single_json_string, is_list_of_list, is_validated_equal
 from .image_utils import save_image_path
+from .logger import get_logger
+
+logger = get_logger("unified_inference")
 
 # ===== 配置导入 =====
 import os
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from volcenginesdkarkruntime import Ark
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 ENV_PATH = os.path.join(PROJECT_ROOT, ".env")
@@ -82,10 +84,6 @@ class BaseTaskProcessor(ABC):
         """生成系统提示词和用户提示词"""
         pass
     
-    @abstractmethod
-    def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
-        """验证结果格式"""
-        pass
 
 
 class UnifiedModelInference:
@@ -95,13 +93,17 @@ class UnifiedModelInference:
         self.client = ARK_CLIENT
         self.task_registry: Dict[str, TaskConfig] = {}
         self.task_processors: Dict[str, BaseTaskProcessor] = {}
-    
+
+    def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
+        """验证答题分析结果"""
+        return validate_single_json_string(result, required_keys)
+
     def register_task(self, task_name: str, config: TaskConfig, processor: BaseTaskProcessor):
         """注册任务类型"""
         self.task_registry[task_name] = config
         self.task_processors[task_name] = processor
     
-    def batch_inference(self, data_list: List[Dict[str, Any]], max_workers: int = 5):
+    def batch_inference(self, data_list: List[Dict[str, Any]], max_workers: int = 3):
         """批量推理"""
         return asyncio.run(self._run_batch(data_list, max_workers))
     
@@ -134,18 +136,11 @@ class UnifiedModelInference:
         
         # 选择模型
         model_results = await self._call_models(
-            sys_prompt, prompt, image_list, config, task_name
+            data,sys_prompt, prompt, image_list, config, task_name
         )
         
-        # 验证结果
-        validated_results = {}
-        for model_name, result in model_results.items():
-            validated = processor.validate_result(result, config.required_keys)
-            validated['model_name'] = model_name
-            validated_results[model_name] = validated
-        
         return {
-            "results": validated_results,
+            "results": model_results,
             "prompt_info": f"系统提示词：{sys_prompt}\n用户提示词：{prompt}",
             "original_data": data
         }
@@ -169,165 +164,138 @@ class UnifiedModelInference:
         
         return image_list
     
-    async def _call_models(self, sys_prompt: str, prompt: str, 
+    async def _call_models(self,data: Dict[str, Any], sys_prompt: str, prompt: str, 
                           image_list: List[str], config: TaskConfig, task_name: str) -> Dict[str, str]:
         """调用模型 - 分发到不同任务的工作流"""
         
         workflow_map = {
             "answer_analysis": self._workflow_answer_analysis,
+            "answer_knowledge_gen": self._workflow_answer_analysis,
+            "answer_correct_gen": self._workflow_answer_analysis,
             "answer_knowledge": self._workflow_answer_knowledge,
-            "answer_correct": self._workflow_answer_correct,
+            "answer_correct": self._workflow_answer_knowledge,
             "answer_difficulty": self._workflow_answer_difficulty,
         }
         
         workflow_func = workflow_map.get(task_name)
         if workflow_func:
-            return await workflow_func(sys_prompt, prompt, image_list, config)
+            return await workflow_func(data, sys_prompt, prompt, image_list, config)
         else:
-            return await self._workflow_default(sys_prompt, prompt, image_list, config)
+            raise ValueError(f"未注册任务类型: {task_name}")
     
-    async def safe_call(self, coro, model_name: str, max_retries: int = 3):
-        """统一的重试机制安全调用方法"""
+    async def safe_call(self, func: Callable, *args, model_name: str, max_retries: int = 3, config: TaskConfig = None, **kwargs) -> Tuple[str, str]:
+        """
+        统一的重试机制安全调用方法
+        func: 异步函数名
+        args/kwargs: 传递给异步函数的参数
+        config: 任务配置，用于验证结果
+        """
         for attempt in range(max_retries):
             try:
-                result = await coro
-                if result and result.strip():
-                    return result, model_name
+                result = await func(*args, **kwargs)
+                if config and config.required_keys:
+                    validated = self.validate_result(result, config.required_keys)
+                    if validated:
+                        return validated, model_name
+                # if result and isinstance(result, str) and result.strip():
+                #     return result, model_name
             except Exception as e:
                 print(f"{model_name} 第{attempt + 1}次调用失败: {e}")
+            
             if attempt < max_retries - 1:
                 await asyncio.sleep(1)
         return "", model_name
-    
-    async def _workflow_answer_analysis(self, sys_prompt: str, prompt: str, 
+
+    async def _workflow_answer_analysis(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
                                         image_list: List[str], config: TaskConfig) -> Dict[str, str]:
-        """答题分析工作流：双模型生成 + 比对"""
-        results = {}
-        print("工作流: 答题分析 (answer_analysis) - 双模型生成 + 比对")
-        
-        first_stage_tasks = [
-            self.safe_call(self._call_vllm(client1, sys_prompt, prompt, image_list), "vllm_model1"),
-            self.safe_call(self._call_ark(ARK_MODELS["deepseek"], sys_prompt, prompt, image_list), "ark_deepseek")
-        ]
-        first_stage_results = await asyncio.gather(*first_stage_tasks)
-        
-        for result, model_name in first_stage_results:
-            results[f"stage1_{model_name}"] = result
-        
-        valid_results = [r for r, _ in first_stage_results if r and r.strip()]
-        if len(valid_results) >= 2:
-            comparison_prompt = self._build_comparison_prompt(valid_results[0], valid_results[1], prompt)
-            comparison_result = await self.safe_call(
-                self._call_ark(ARK_MODELS["doubao"], sys_prompt, comparison_prompt, image_list),
-                "comparison_model"
-            )
-            results["stage2_comparison"] = comparison_result[0]
-        
-        return results
-    
-    async def _workflow_answer_knowledge(self, sys_prompt: str, prompt: str, 
-                                         image_list: List[str], config: TaskConfig) -> Dict[str, str]:
-        """知识点判定工作流：单模型快速判定"""
-        results = {}
-        print("工作流: 知识点判定 (answer_knowledge) - 单模型快速判定")
-        
-        task = self.safe_call(
-            self._call_ark(ARK_MODELS["deepseek"], sys_prompt, prompt, image_list),
-            "ark_deepseek"
-        )
-        result = await task
-        results[result[1]] = result[0]
-        
-        return results
-    
-    async def _workflow_answer_correct(self, sys_prompt: str, prompt: str, 
-                                       image_list: List[str], config: TaskConfig) -> Dict[str, str]:
-        """答案比对工作流：双模型并行 + 比对"""
-        results = {}
-        print("工作流: 答案比对 (answer_correct) - 双模型并行 + 比对")
-        
-        first_stage_tasks = [
-            self.safe_call(self._call_vllm(client1, sys_prompt, prompt, image_list), "vllm_model1"),
-            self.safe_call(self._call_vllm(client2, sys_prompt, prompt, image_list), "vllm_model2")
-        ]
-        first_stage_results = await asyncio.gather(*first_stage_tasks)
-        
-        for result, model_name in first_stage_results:
-            results[f"stage1_{model_name}"] = result
-        
-        valid_results = [r for r, _ in first_stage_results if r and r.strip()]
-        if len(valid_results) >= 2:
-            comparison_prompt = self._build_comparison_prompt(valid_results[0], valid_results[1], prompt)
-            comparison_result = await self.safe_call(
-                self._call_ark(ARK_MODELS["deepseek"], sys_prompt, comparison_prompt, image_list),
-                "comparison_model"
-            )
-            results["stage2_comparison"] = comparison_result[0]
-        
-        return results
-    
-    async def _workflow_answer_difficulty(self, sys_prompt: str, prompt: str, 
-                                          image_list: List[str], config: TaskConfig) -> Dict[str, str]:
-        """难度判定工作流：单模型判定"""
-        results = {}
-        print("工作流: 难度判定 (answer_difficulty) - 单模型判定")
-        
-        task = self.safe_call(
-            self._call_vllm(client1, sys_prompt, prompt, image_list),
-            "vllm_model1"
-        )
-        result = await task
-        results[result[1]] = result[0]
-        
-        return results
-    
-    async def _workflow_default(self, sys_prompt: str, prompt: str, 
-                                image_list: List[str], config: TaskConfig) -> Dict[str, str]:
-        """默认工作流：多模型并行"""
-        results = {}
-        print("工作流: 默认 - 多模型并行")
-        
-        if config.model_selection == "vllm_only":
-            tasks = [
-                self.safe_call(self._call_vllm(client1, sys_prompt, prompt, image_list), "vllm_model1"),
-                self.safe_call(self._call_vllm(client2, sys_prompt, prompt, image_list), "vllm_model2")
-            ]
-        elif config.model_selection == "ark_only":
-            tasks = [
-                self.safe_call(self._call_ark(ARK_MODELS["deepseek"], sys_prompt, prompt, image_list), "ark_deepseek"),
-                self.safe_call(self._call_ark(ARK_MODELS["doubao"], sys_prompt, prompt, image_list), "ark_doubao")
-            ]
-        else:
-            tasks = [
-                self.safe_call(self._call_vllm(client1, sys_prompt, prompt, image_list), "vllm_model1"),
-                self.safe_call(self._call_vllm(client2, sys_prompt, prompt, image_list), "vllm_model2"),
-                self.safe_call(self._call_ark(ARK_MODELS["deepseek"], sys_prompt, prompt, image_list), "ark_deepseek")
-            ]
-        
-        model_responses = await asyncio.gather(*tasks)
-        
-        for result, model_name in model_responses:
-            results[model_name] = result
-        
-        return results
-    
-    def _build_comparison_prompt(self, result1: str, result2: str, original_prompt: str) -> str:
-        """构建比对提示词"""
-        return f"""
-请对以下两个分析结果进行比对和整合：
+        """工作流：双模型生成 + 比对"""
+        def _build_comparison_prompt(result1: str, result2: str) -> str:
+            """构建比对提示词"""
+            return f"""
+请对以下两个分析结果进行比对：
 
-原始问题：
-{original_prompt}
-
-分析结果1：
+结果1：
 {result1}
 
-分析结果2：
+结果2：
 {result2}
 
-请综合两个分析结果，给出一个更全面、准确的分析：
+请综合两个结果，判断两个结果是否一致：
+
+### 输出要求
+- 必须输出 JSON
+- 不得包含任何额外说明文字
+
+### 输出格式
+{{
+ "correct": "是/否",
+ "reason": "判断原因"
+}}
+
 """
-    
+
+        results = {}
+        print("工作流: 双模型生成 + 比对")
+        
+        # 传递函数引用和参数，而不是直接传 awaitable
+        first_stage_tasks = [
+            self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
+            self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config),
+        ]
+        first_stage_results = await asyncio.gather(*first_stage_tasks)
+                
+        for result, model_name in first_stage_results:
+            results[f"{model_name}"] = result
+
+        valid_results = [r for r in results.values() if r['is_valid']]
+        comparison_result = {"correct": "", "reason": "", 'is_valid': ""}
+
+        if len(valid_results) >= 2:
+            if is_validated_equal(valid_results[0], valid_results[1], ["answer", "kp_code", "question_type"]):
+                comparison_result['correct'] = "是"
+                comparison_result['reason'] = "两个模型结果一致"
+                comparison_result['is_valid'] = True
+            else:
+                comparison_prompt = _build_comparison_prompt(json.dumps(valid_results[0],ensure_ascii=False), json.dumps(valid_results[1],ensure_ascii=False))
+                # 修复：移除行尾逗号，正确传递参数
+                res, _ = await self.safe_call(self._call_vllm, client1, sys_prompt, comparison_prompt, image_list, model_name="comparison_model", config=config)
+                comparison_result = self.validate_result(res, {"correct", "reason"})
+                comparison_result['is_valid'] = True
+        else:
+            logger.warning("两个模型结果为空，无法进行比对")
+            # results["model_judge"] = ""
+        results['comparison_result'] = comparison_result
+        return results
+
+    async def _workflow_answer_knowledge(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
+                                         image_list: List[str], config: TaskConfig) -> Dict[str, str]:
+        """知识点判定工作流：任一模型快速判定"""
+        results = {}
+        print("工作流: 知识点判定 - 双模型竞争")
+        
+        # 逻辑：两个模型同时跑，谁先出结果且有效就用谁
+        tasks = [
+            self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
+            # self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2")
+        ]
+        responses = await asyncio.gather(*tasks, return_exceptions=True)
+        for response in responses:
+            # 检查是否是异常对象（防止程序崩溃）
+            if isinstance(response, Exception):
+                print(f"任务执行出错: {response}")
+                continue
+                
+            result, model_name = response
+            if result:  # 只有结果不为空才放入字典
+                results[model_name] = result
+        return results
+
+    async def _workflow_answer_difficulty(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
+                                          image_list: List[str], config: TaskConfig) -> Dict[str, str]:
+        """难度判定工作流"""
+        res, model_name = await self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config)
+        return {model_name: res}
+
     async def _call_vllm(self, client: AsyncOpenAI, sys_prompt: str, 
                         prompt: str, image_list: List[str]) -> str:
         """调用 vLLM 模型"""
@@ -350,7 +318,7 @@ class UnifiedModelInference:
             )
             return response.choices[0].message.content
         except Exception as e:
-            print(f"vLLM 调用失败: {e}")
+            logger.error(f"vLLM 调用失败: {e}")
             return ""
     
     async def _call_ark(self, model_name: str, sys_prompt: str, 
@@ -375,7 +343,7 @@ class UnifiedModelInference:
 
 # ===== 具体任务处理器实现 =====
 
-class AnswerAnalysisProcessor(BaseTaskProcessor):
+class Processor(BaseTaskProcessor):
     """答题分析处理器"""
     
     def __init__(self, prompt_generator: Callable):
@@ -385,43 +353,6 @@ class AnswerAnalysisProcessor(BaseTaskProcessor):
         """生成答题分析提示词"""
         return self.prompt_generator(data)
     
-    def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
-        """验证答题分析结果"""
-        return validate_single_json_string(result, required_keys)
-
-
-class KnowledgeJudgmentProcessor(BaseTaskProcessor):
-    """知识点判定处理器"""
-    
-    def __init__(self, prompt_generator: Callable):
-        self.prompt_generator = prompt_generator
-    
-    def generate_prompt(self, data: Dict[str, Any]) -> tuple:
-        """生成知识点判定提示词"""
-        # 这里可以添加知识点判定的特定逻辑
-        return self.prompt_generator(data)
-    
-    def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
-        """验证知识点判定结果"""
-        # 知识点判定可能有不同的验证逻辑
-        return validate_single_json_string(result, required_keys)
-
-
-class AnswerComparisonProcessor(BaseTaskProcessor):
-    """答案比对处理器"""
-    
-    def __init__(self, prompt_generator: Callable):
-        self.prompt_generator = prompt_generator
-    
-    def generate_prompt(self, data: Dict[str, Any]) -> tuple:
-        """生成答案比对提示词"""
-        # 这里可以添加答案比对的特定逻辑
-        return self.prompt_generator(data)
-    
-    def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
-        """验证答案比对结果"""
-        # 答案比对可能有不同的验证逻辑
-        return validate_single_json_string(result, required_keys)
 
 
 # ===== 全局推理器实例 =====

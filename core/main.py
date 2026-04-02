@@ -9,6 +9,7 @@ import logging
 import time
 import io
 import base64
+import signal
 from typing import Dict, Any
 
 import numpy as np
@@ -71,7 +72,11 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
                     pickle.dump(all_results_m, f)
                 pkl_json(f'{result_dir}/{item["uuid"]}.pkl', f'{result_dir}/{item["uuid"]}.json')
                 print(index)
-            except:
+            except KeyboardInterrupt:
+                logger.info("收到中断信号，正在退出...")
+                sys.exit(130)
+            except Exception as e:
+                logger.error(f"处理项目 {item.get('uuid', 'unknown')} 时出错: {e}")
                 continue
 
 
@@ -110,6 +115,14 @@ def fill_example(row, df):
     # 👉 fallback：没有匹配就保留原值
     return result if result is not None else row["answer_type_example_one"]
 if __name__ == "__main__":
+    # 设置信号处理器
+    def signal_handler(signum, frame):
+        logger.info(f"收到信号 {signum}，正在退出...")
+        sys.exit(130)
+    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     import argparse
     parser = argparse.ArgumentParser(description='运行任务分析')
     parser.add_argument('--task', type=str, default='answer_analysis', 

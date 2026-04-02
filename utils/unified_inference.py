@@ -4,6 +4,8 @@
 """
 import asyncio
 import os
+import sys
+import signal
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List, Callable, Optional, Tuple
 from dataclasses import dataclass
@@ -111,65 +113,131 @@ class UnifiedModelInference:
     
     def batch_inference(self, data_list: List[Dict[str, Any]], max_workers: int = 3):
         """批量推理，支持 Ctrl+C 中断"""
+        # 设置信号处理器
+        def signal_handler(signum, frame):
+            logger.warning(f"\n收到信号 {signum}，正在安全退出...")
+            sys.exit(130)
+        
+        # 注册信号处理器
+        original_sigint = signal.signal(signal.SIGINT, signal_handler)
+        original_sigterm = signal.signal(signal.SIGTERM, signal_handler)
+        
         try:
-            # 方案 A: 使用现代的 asyncio.run (推荐)
-            return asyncio.run(self._run_batch(data_list, max_workers))
-        except KeyboardInterrupt:
-            logger.warning("\n检测到 Ctrl+C，正在尝试停止所有任务...")
-            return []
+            # 创建新的事件循环来确保干净的状态
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+            try:
+                return loop.run_until_complete(self._run_batch(data_list, max_workers))
+            except (KeyboardInterrupt, asyncio.CancelledError):
+                logger.warning("\n检测到中断信号，正在安全退出...")
+                return []
+            finally:
+                # 确保所有任务都被取消
+                pending = asyncio.all_tasks(loop)
+                if pending:
+                    logger.info(f"正在取消 {len(pending)} 个待处理任务...")
+                    for task in pending:
+                        task.cancel()
+                    # 等待所有任务完成取消
+                    loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+                
+                loop.close()
+                
         except Exception as e:
             logger.error(f"运行时错误: {e}")
             return []
+        finally:
+            # 恢复原始信号处理器
+            signal.signal(signal.SIGINT, original_sigint)
+            signal.signal(signal.SIGTERM, original_sigterm)
 
     async def _run_batch(self, data_list: List[Dict[str, Any]], max_workers: int):
         sem = asyncio.Semaphore(max_workers)
-
         tasks = []
 
         async def sem_task(data):
             async with sem:
-                return await self._process_single_data(data)
+                try:
+                    return await self._process_single_data(data)
+                except asyncio.CancelledError:
+                    logger.debug(f"任务被取消: {data.get('uuid', 'unknown')}")
+                    raise
 
         try:
+            # 创建任务列表
             tasks = [asyncio.create_task(sem_task(data)) for data in data_list]
-            return await asyncio.gather(*tasks)
-
-        except asyncio.CancelledError:
-            logger.warning("任务被取消")
+            
+            # 使用 asyncio.wait 而不是 gather，这样可以更好地处理取消
+            done, pending = await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            
+            # 收集结果
+            results = []
+            for task in done:
+                try:
+                    result = await task
+                    results.append(result)
+                except asyncio.CancelledError:
+                    logger.debug("任务被取消")
+                except Exception as e:
+                    logger.error(f"任务执行失败: {e}")
+                    
+            return results
+            
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            logger.warning("🛑 检测到中断，正在强制取消所有子任务...")
             raise
-
-        except Exception as e:
-            logger.error(f"运行错误: {e}")
-            for t in tasks:
-                t.cancel()
-            raise
+        finally:
+            # 无论成功还是失败/取消，都检查并关闭所有任务
+            if tasks:
+                running_tasks = [t for t in tasks if not t.done()]
+                if running_tasks:
+                    logger.info(f"正在取消 {len(running_tasks)} 个运行中的任务...")
+                    for t in running_tasks:
+                        t.cancel()
+                    # 给子任务一点时间来处理 CancelledError（例如关闭网络连接）
+                    try:
+                        await asyncio.wait_for(
+                            asyncio.gather(*running_tasks, return_exceptions=True),
+                            timeout=5.0  # 5秒超时
+                        )
+                    except asyncio.TimeoutError:
+                        logger.warning("部分任务取消超时，强制退出")
+                    logger.info(f"✅ 已成功清理 {len(running_tasks)} 个运行中的任务。")
 
     async def _process_single_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """处理单个数据"""
-        task_name = data.get('task')
-        if task_name not in self.task_registry:
-            raise ValueError(f"未知任务类型: {task_name}")
-        
-        config = self.task_registry[task_name]
-        processor = self.task_processors[task_name]
-        
-        # 生成提示词
-        sys_prompt, prompt = processor.generate_prompt(data)
-        
-        # 处理图片
-        raw_images = data.get('image_list', [])
-        image_list = self._process_images(raw_images, data.get('uuid'))
-        
-        # 选择模型
-        model_results = await self._call_models(
-            data,sys_prompt, prompt, image_list, config, task_name
-        )
-        
-        return {
-            "results": model_results,
-            "prompt_info": f"系统提示词：{sys_prompt}\n任务提示词：{prompt}",
-            "original_data": data
-        }
+        try:
+            task_name = data.get('task')
+            if task_name not in self.task_registry:
+                raise ValueError(f"未知任务类型: {task_name}")
+            
+            config = self.task_registry[task_name]
+            processor = self.task_processors[task_name]
+            
+            # 生成提示词
+            sys_prompt, prompt = processor.generate_prompt(data)
+            
+            # 处理图片
+            raw_images = data.get('image_list', [])
+            image_list = self._process_images(raw_images, data.get('uuid'))
+            
+            # 选择模型
+            model_results = await self._call_models(
+                data, sys_prompt, prompt, image_list, config, task_name
+            )
+            
+            return {
+                "results": model_results,
+                "prompt_info": f"系统提示词：{sys_prompt}\n任务提示词：{prompt}",
+                "original_data": data
+            }
+        except asyncio.CancelledError:
+            logger.debug(f"单个数据处理被取消: {data.get('uuid', 'unknown')}")
+            raise
+        except Exception as e:
+            logger.error(f"处理数据时出错: {e}")
+            raise
     
     def _process_images(self, raw_images: List, uuid: str) -> List[str]:
         """处理图片列表"""
@@ -218,18 +286,27 @@ class UnifiedModelInference:
         """
         for attempt in range(max_retries):
             try:
+                # 检查是否被取消
+                if asyncio.current_task().cancelled():
+                    raise asyncio.CancelledError()
+                    
                 result = await func(*args, **kwargs)
                 if config and config.required_keys:
                     validated = self.validate_result(result, config.required_keys)
                     if validated:
                         return validated, model_name
-                # if result and isinstance(result, str) and result.strip():
-                #     return result, model_name
+            except asyncio.CancelledError:
+                # 重要：如果是取消信号，必须直接抛出，不能重试
+                logger.debug(f"{model_name} 调用被取消")
+                raise
             except Exception as e:
-                print(f"{model_name} 第{attempt + 1}次调用失败: {e}")
+                logger.warning(f"{model_name} 第{attempt + 1}次调用失败: {e}")
             
             if attempt < max_retries - 1:
-                await asyncio.sleep(1)
+                try:
+                    await asyncio.sleep(1)
+                except asyncio.CancelledError:
+                    raise
         return "", model_name
 
     async def _workflow_answer_analysis(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
@@ -262,11 +339,18 @@ class UnifiedModelInference:
         print("工作流: 双模型生成 + 比对")
         
         # 传递函数引用和参数，而不是直接传 awaitable
-        first_stage_tasks = [
-            self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
-            self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config),
-        ]
-        first_stage_results = await asyncio.gather(*first_stage_tasks)
+        t1 = asyncio.create_task(self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
+        t2 = asyncio.create_task(self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config))
+        
+        stage_tasks = [t1, t2]
+        try:
+            first_stage_results = await asyncio.gather(*stage_tasks)
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            for t in stage_tasks:
+                if not t.done(): t.cancel()
+            # 等待一小会儿确保取消动作传播
+            await asyncio.gather(*stage_tasks, return_exceptions=True)
+            raise
                 
         for result, model_name in first_stage_results:
             results[f"{model_name}"] = result
@@ -333,6 +417,10 @@ class UnifiedModelInference:
             })
         
         try:
+            # 检查是否被取消
+            if asyncio.current_task().cancelled():
+                raise asyncio.CancelledError()
+                
             response = await client.chat.completions.create(
                 model="",
                 messages=[
@@ -342,6 +430,9 @@ class UnifiedModelInference:
                 **VLLM_DEFAULT_PARAMS,
             )
             return response.choices[0].message.content
+        except asyncio.CancelledError:
+            logger.debug("vLLM 调用被取消")
+            raise
         except Exception as e:
             logger.error(f"vLLM 调用失败: {e}")
             return ""
@@ -363,7 +454,15 @@ class UnifiedModelInference:
             )
             return completion.choices[0].message.content
         
-        return await asyncio.to_thread(_sync_call)
+        try:
+            # 检查是否被取消
+            if asyncio.current_task().cancelled():
+                raise asyncio.CancelledError()
+                
+            return await asyncio.to_thread(_sync_call)
+        except asyncio.CancelledError:
+            logger.debug("Ark 调用被取消")
+            raise
 
 
 # ===== 具体任务处理器实现 =====

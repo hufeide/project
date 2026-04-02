@@ -23,3 +23,7 @@ logs/
 # IDE
 .vscode/
 .idea/data/
+
+#key
+.key
+.key.pub

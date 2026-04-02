@@ -44,6 +44,7 @@ def main():
 
     for folder in FOLDERS:
         folder_path = os.path.join(RESULT_DIR, folder)
+        os.makedirs(folder_path, exist_ok=True)
         if not os.path.exists(folder_path):
             print(f"文件夹不存在: {folder_path}")
             continue

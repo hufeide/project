@@ -11,38 +11,16 @@ def is_validated_equal(v1: dict, v2: dict, keys=None) -> bool:
 
     if keys is None:
         keys = ["answer", "kp_code", "question_type"]
-
+    has_any_key = any(k in v1 or k in v2 for k in keys)
+    if not has_any_key:
+        return False
     for k in keys:
         if k in v1 and k in v2:
             if v1[k] != v2[k]:
                 return False
 
     return True
-# def validate_single_json_string(json_str, required_keys):
-#     empty_dict = {key: "" for key in required_keys}
-#     empty_dict['is_valid'] = False
-#     try:
-#         data = json.loads(json_str)
-#         if isinstance(data, list):
-#             data = data[0]
-#         data['is_valid'] = True
-#         if not isinstance(data, dict):
-#             return empty_dict
 
-#         current_keys = set(data.keys())
-#         missing = required_keys - current_keys
-#         if missing:
-#             return empty_dict
-
-#         for key in required_keys:
-#             val = data.get(key)
-#             if val is None or str(val).strip() == "":
-#                 return empty_dict
-
-#         return data
-
-#     except json.JSONDecodeError:
-#         return empty_dict
 
 
 import json

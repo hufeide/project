@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 from PIL import Image
-
+from multiprocessing import Process, Queue
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
@@ -90,7 +90,25 @@ class knowledge_md:
             return knowledge_md
         except FileNotFoundError:
             return ""
+def match_example(df, question_type, knowledge_code):
+    def split_codes(x):
+        if pd.isna(x):
+            return []
+        return [i.strip() for i in str(x).strip("、").split("、") if i.strip()]
+    df_filtered = df[df["题型"] == question_type].copy()
+    df_filtered["code_list"] = df_filtered["对应广东字典库条目"].apply(split_codes)
 
+    matched = df_filtered[df_filtered["code_list"].apply(lambda x: knowledge_code in x)]
+
+    if matched.empty:
+        return None
+
+    return "".join(matched["示例"])
+def fill_example(row, df):
+    result = match_example(df, row["questionType"], row["knowledge"])
+
+    # 👉 fallback：没有匹配就保留原值
+    return result if result is not None else row["answer_type_example_one"]
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='运行任务分析')
@@ -178,6 +196,11 @@ if __name__ == "__main__":
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = [answer_type_prompt.get(x) for x in df["questionType"]]
         df["answer_type_example_one"] = [answer_type_example.get(x) for x in df["questionType"]]
+        answer_consist = pd.read_excel(os.path.join(PROMPT_DIR, "example_answer_analysis.xlsx"))
+        answer_consist["对应广东字典库条目"] = answer_consist["对应广东字典库条目"].ffill()
+        df["answer_type_example_one"] = df.apply(lambda row: fill_example(row, answer_consist), axis=1)
+        df.to_excel('/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/processed_data_0323.xlsx', index=False)
+
         ###知识
         knowledge_md_obj = knowledge_md()
         df['knowledgemd'] = df.apply(lambda x: knowledge_md_obj.get_knowledge_point(x['knowledge']), axis=1)
@@ -194,7 +217,7 @@ if __name__ == "__main__":
         df['knowledgemd'] = json.dumps(know_md.to_dict(orient='records'), ensure_ascii=False)
     
     if task == "answer_correct":
-        answer_system = load_prompt('task_answer_check_sys.txt')
+        answer_system = load_prompt('task_answer_correct_sys.txt')
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = ""
         df["answer_type_example_one"] = ""
@@ -217,11 +240,15 @@ if __name__ == "__main__":
         know_md.sort_values(by='kp_code', inplace=True)
         df['knowledgemd'] = json.dumps(know_md.to_dict(orient='records'), ensure_ascii=False)
     
+    
+    # if 1==1:
+    #     df = df.sample(frac=0.2)
+    #     df['knowledge'] = df['knowledge'].sample(frac=1).values
+    #     df['knowledge_name'] = df['knowledge_name'].sample(frac=1).values
+    #     df['answer'] = df['answer'].sample(frac=1).values
 
     datas = df.to_dict(orient='records')
     all_question = []
-    all_uuid_mapping = {}
-
     required_fields = ['subject', 'questionMateria', 'questionStem', 'questionType', 'questionNo', 'knowledge']
 
     images_end_list = []
@@ -245,9 +272,7 @@ if __name__ == "__main__":
             raise ValueError(f"Question {index + 1} has {len(images_list_valid)} valid images out of {len(images_list)} total images")
         images_list = images_list_valid
         uuid_one = data.get('uuid')
-        all_uuid_mapping[index + 1] = uuid_one
 
-        logger.info(f"Processing question {index + 1}")
         knowledge_code = data.get("knowledge")
         knowledge_name = data.get("knowledge_name")
 
@@ -271,3 +296,7 @@ if __name__ == "__main__":
         images_end_list.append(images_list)
         all_question.append(question_dict_one)
     res = process_question(all_question, task=task)
+# python core/main.py --task answer_analysis
+# python core/main.py --task answer_correct
+# python core/main.py --task answer_correct_gen
+# python core/main.py --task answer_knowledge_gen

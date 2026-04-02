@@ -11,7 +11,8 @@ import json
 from .json_validation import validate_single_json_string, is_list_of_list, is_validated_equal
 from .image_utils import save_image_path
 from .logger import get_logger
-
+import pandas as pd
+import copy
 logger = get_logger("unified_inference")
 
 # ===== 配置导入 =====
@@ -93,7 +94,12 @@ class UnifiedModelInference:
         self.client = ARK_CLIENT
         self.task_registry: Dict[str, TaskConfig] = {}
         self.task_processors: Dict[str, BaseTaskProcessor] = {}
-
+        def _load_prompt(file_name: str) -> str:
+            path = os.path.join(PROJECT_ROOT, "data", "prompt_file", file_name)
+            with open(path, "r", encoding="utf-8") as f:
+                return f.read()
+        self.answer_analysis_consist = _load_prompt("task_answer_analysis_consist.txt")
+        self.answer_correct_gen_consist = _load_prompt("task_answer_correct_gen_consist.txt")
     def validate_result(self, result: str, required_keys: set) -> Dict[str, Any]:
         """验证答题分析结果"""
         return validate_single_json_string(result, required_keys)
@@ -104,20 +110,40 @@ class UnifiedModelInference:
         self.task_processors[task_name] = processor
     
     def batch_inference(self, data_list: List[Dict[str, Any]], max_workers: int = 3):
-        """批量推理"""
-        return asyncio.run(self._run_batch(data_list, max_workers))
-    
+        """批量推理，支持 Ctrl+C 中断"""
+        try:
+            # 方案 A: 使用现代的 asyncio.run (推荐)
+            return asyncio.run(self._run_batch(data_list, max_workers))
+        except KeyboardInterrupt:
+            logger.warning("\n检测到 Ctrl+C，正在尝试停止所有任务...")
+            return []
+        except Exception as e:
+            logger.error(f"运行时错误: {e}")
+            return []
+
     async def _run_batch(self, data_list: List[Dict[str, Any]], max_workers: int):
-        """异步批量推理"""
         sem = asyncio.Semaphore(max_workers)
-        
+
+        tasks = []
+
         async def sem_task(data):
             async with sem:
                 return await self._process_single_data(data)
-        
-        tasks = [sem_task(data) for data in data_list]
-        return await asyncio.gather(*tasks, return_exceptions=True)
-    
+
+        try:
+            tasks = [asyncio.create_task(sem_task(data)) for data in data_list]
+            return await asyncio.gather(*tasks)
+
+        except asyncio.CancelledError:
+            logger.warning("任务被取消")
+            raise
+
+        except Exception as e:
+            logger.error(f"运行错误: {e}")
+            for t in tasks:
+                t.cancel()
+            raise
+
     async def _process_single_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """处理单个数据"""
         task_name = data.get('task')
@@ -141,7 +167,7 @@ class UnifiedModelInference:
         
         return {
             "results": model_results,
-            "prompt_info": f"系统提示词：{sys_prompt}\n用户提示词：{prompt}",
+            "prompt_info": f"系统提示词：{sys_prompt}\n任务提示词：{prompt}",
             "original_data": data
         }
     
@@ -209,29 +235,27 @@ class UnifiedModelInference:
     async def _workflow_answer_analysis(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
                                         image_list: List[str], config: TaskConfig) -> Dict[str, str]:
         """工作流：双模型生成 + 比对"""
-        def _build_comparison_prompt(result1: str, result2: str) -> str:
-            """构建比对提示词"""
+        task_name = data.get('task')
+        if task_name == "answer_analysis":
+            task_consist = self.answer_analysis_consist
+        else:
+            task_consist = self.answer_correct_gen_consist
+        
+        def _build_analysis_prompt(result1: str, result2: str) -> str:
             return f"""
-请对以下两个分析结果进行比对：
+## 题目信息
+材料：
+{data['material']}
 
-结果1：
+题目：
+{data['question']}
+
+## 请对以下两个结果做判断：
+### 结果1
 {result1}
 
-结果2：
+### 结果2
 {result2}
-
-请综合两个结果，判断两个结果是否一致：
-
-### 输出要求
-- 必须输出 JSON
-- 不得包含任何额外说明文字
-
-### 输出格式
-{{
- "correct": "是/否",
- "reason": "判断原因"
-}}
-
 """
 
         results = {}
@@ -256,15 +280,16 @@ class UnifiedModelInference:
                 comparison_result['reason'] = "两个模型结果一致"
                 comparison_result['is_valid'] = True
             else:
-                comparison_prompt = _build_comparison_prompt(json.dumps(valid_results[0],ensure_ascii=False), json.dumps(valid_results[1],ensure_ascii=False))
+
+                comparison_prompt = _build_analysis_prompt(json.dumps(valid_results[0],ensure_ascii=False), json.dumps(valid_results[1],ensure_ascii=False))
                 # 修复：移除行尾逗号，正确传递参数
-                res, _ = await self.safe_call(self._call_vllm, client1, sys_prompt, comparison_prompt, image_list, model_name="comparison_model", config=config)
-                comparison_result = self.validate_result(res, {"correct", "reason"})
-                comparison_result['is_valid'] = True
+                config_compare = copy.deepcopy(config)
+                config_compare.required_keys = {"correct", "better", "reason"}
+                res, _ = await self.safe_call(self._call_vllm, client1, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
         else:
             logger.warning("两个模型结果为空，无法进行比对")
             # results["model_judge"] = ""
-        results['comparison_result'] = comparison_result
+        results['comparison_result'] = res
         return results
 
     async def _workflow_answer_knowledge(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 

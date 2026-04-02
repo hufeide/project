@@ -28,7 +28,7 @@ def prompt_answer_knowledge(processed_data):
     prompt = f"""
     知识点清单：{knowledge_text}
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     题型：{question_type}
     人工标记的知识代码：{knowledge_code}
     人工标记的知识点：{knowledge_name}
@@ -63,7 +63,7 @@ def prompt_answer_correct(processed_data):
         image_rule_text = f"【图片使用规则（必须严格遵守）】/n {image_rule_text}"
     prompt = f"""
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     '{material_text}'
     题目内容：'{question}'
     正确答案：{answer}
@@ -95,7 +95,7 @@ def prompt_answer_knowledge_gen(processed_data):
     prompt = f"""
     知识点清单：{knowledge_text}
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     '{material_text}'
     题目内容：'{question}'
     """
@@ -123,7 +123,7 @@ def prompt_answer_correct_gen(processed_data):
         image_rule_text = f"【图片使用规则（必须严格遵守）】/n {image_rule_text}"
     prompt = f"""
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     '{material_text}'
     题目内容：'{question}'
     """
@@ -176,7 +176,7 @@ def prompt_answer_analysis(processed_data):
     # 试题分析答题分析要求：{promote_out}
     {answer_example}
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     题型：{question_type}
     knowledge：{knowledge_name}
     level：{level}
@@ -211,7 +211,7 @@ def prompt_answer_difficulty(processed_data):
         image_rule_text = f"【图片使用规则（必须严格遵守）】/n {image_rule_text}"
     prompt = f"""
     {image_rule_text}
-    # 请对以下【题目】进行试题分析和答题分析：
+    # 请对根据以下【题目】完成任务：
     '{material_text}'
     题目内容：'{question}'
     正确答案：{answer}

@@ -6,7 +6,7 @@ from .image_utils import build_image_instruction
 def prompt_answer_knowledge(processed_data):
     knowledge_text = processed_data['knowledge']
     knowledge_name = processed_data['knowledge_name']
-    knowledge_code = processed_data['knowledge_code']
+    knowledgeCode = processed_data['knowledgeCode']
     level = processed_data['level']
     generated_text = processed_data['promote_head']
     question_type = processed_data['question_type']
@@ -30,7 +30,7 @@ def prompt_answer_knowledge(processed_data):
     {image_rule_text}
     # 请对根据以下【题目】完成任务：
     题型：{question_type}
-    人工标记的知识代码：{knowledge_code}
+    人工标记的知识代码：{knowledgeCode}
     人工标记的知识点：{knowledge_name}
     level：{level}
     '{material_text}'
@@ -136,7 +136,7 @@ def prompt_answer_correct_gen(processed_data):
 def prompt_answer_analysis(processed_data):
     knowledge_text = processed_data['knowledge']
     knowledge_name = processed_data['knowledge_name']
-    knowledge_code = processed_data['knowledge_code']
+    knowledgeCode = processed_data['knowledgeCode']
     level = processed_data['level']
     promote_out = processed_data['promote_out']
     answer_example = processed_data['answer_example']

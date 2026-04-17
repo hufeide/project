@@ -369,11 +369,11 @@ class UnifiedModelInference:
                 # 修复：移除行尾逗号，正确传递参数
                 config_compare = copy.deepcopy(config)
                 config_compare.required_keys = {"correct", "better", "reason"}
-                res, _ = await self.safe_call(self._call_vllm, client1, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
+                comparison_result, _ = await self.safe_call(self._call_vllm, client1, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
         else:
             logger.warning("两个模型结果为空，无法进行比对")
             # results["model_judge"] = ""
-        results['comparison_result'] = res
+        results['comparison_result'] = comparison_result
         return results
 
     async def _workflow_answer_knowledge(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 

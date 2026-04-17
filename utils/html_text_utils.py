@@ -7,7 +7,7 @@ from .image_utils import extract_image_from_html
 import json
 import os
 import pickle
-
+import unicodedata
 
 def pkl_json(pkl_path, json_path):
     output_path = json_path
@@ -30,50 +30,67 @@ def pkl_json(pkl_path, json_path):
 
 
 def clean_html_text(html_content, start_num=1):
-    """清理HTML内容：去除标签、保留着重号并插入图片占位符"""
+    if not html_content:
+        return "", [], start_num
+
+    # 1. 预处理：先干掉 HTML 里的 \r\n，防止它们被识别为文本节点
+    html_content = html_content.replace('\r\n', '').replace('\r', '').replace('\n', '')
+    
     soup = BeautifulSoup(html_content, 'html.parser')
 
+    # 2. 处理图片
     imgs = soup.find_all('img', class_='dscimg')
-    src_list = [extract_image_from_html(x) for x in imgs]
-
+    src_list = [extract_image_from_html(x) for x in imgs] # 假设已定义
     current_num = start_num
-    for i, img in enumerate(imgs):
-        img_placeholder = f"【图片{current_num}】"
-        img.replace_with(img_placeholder)
+    for img in imgs:
+        img.replace_with(f"【图片{current_num}】")
         current_num += 1
 
-    dot_spans = soup.find_all('span', class_='dot')
-    for span in dot_spans:
-        dot_text = span.get_text()
-        span.replace_with(f"〖{dot_text}〗")
+    # 3. 处理着重号
+    for span in soup.find_all('span', class_='dot'):
+        span.replace_with(f"<dot>{span.get_text()}</dot>")
 
+    # 4. 处理下划线（填空位）- 先处理下划线标签，再处理内容中的下划线
+    for u_tag in soup.find_all('u'):
+        u_content = u_tag.get_text()
+        u_tag.replace_with(f"<u>{u_content}</u>")
+
+
+    # 5. 处理波浪线
+    for w_tag in soup.find_all('w'):
+        w_content = w_tag.get_text()
+        if w_content:
+            u_tag.replace_with(f"<w>{w_content}</w>")
+
+
+
+    # 6. 关键改进：处理块级元素的换行，但保护内联元素
+    # 我们只在 <p> 和 <br> 处显式换行
     for br in soup.find_all("br"):
         br.replace_with("\n")
-
+    
     for p in soup.find_all("p"):
-        p.insert_after("\n")
+        # 在段落结束处加换行，但先检查它是否已经有换行了
+        p.append("\n") 
 
-    raw_text = soup.get_text()
+    # 7. 终极清洗
+    # 使用 NFKC 标准化处理 \xa0 等
+    raw_text = unicodedata.normalize('NFKC', soup.get_text())
+    
+    # 替换 Excel 特殊字符
+    raw_text = raw_text.replace('_x000d_', '') 
 
-    cleaned_text = re.sub(r'\r\n', '\n', raw_text)
-    cleaned_text = re.sub(r'\r', '\n', cleaned_text)
-    cleaned_text = re.sub(r'\n{3,}', '\n\n', cleaned_text)
+    # 处理下划线内容（________）
+    raw_text = re.sub(r'_+', '____', raw_text)
 
-    lines = []
-    for line in cleaned_text.split('\n'):
-        stripped_line = line.strip()
-        if stripped_line:
-            lines.append(stripped_line)
-        elif line:
-            lines.append("")
-
-    cleaned_text = '\n'.join(lines)
-    cleaned_text = cleaned_text.strip()
-
-    cleaned_text = cleaned_text.replace('\xa0', ' ').replace('\u2000', ' ').replace('\u3000', '    ').replace('_x000d_', ' ').replace('\n', ' ')
-
-    return cleaned_text, src_list, current_num
-
+    # 核心：将"多个换行"压缩，但将"单字间的换行"直接删掉
+    # 这里我们采用一种折中方案：先处理掉那些夹在汉字/数字中间的单个换行
+    cleaned_text = re.sub(r'(?<=[\u4e00-\u9fa5\d\w])\n(?=[\u4e00-\u9fa5\d\w])', '', raw_text)
+    
+    # 压缩过多的空行
+    cleaned_text = re.sub(r'\n{2,}', '\n', cleaned_text)
+    
+    return cleaned_text.strip(), src_list, current_num
 
 def is_empty_text(x) -> bool:
     if pd.isna(x):

@@ -90,14 +90,14 @@ class KnowledgeEnhancedQA_list:
         else:
             image_list = raw_images if isinstance(raw_images, list) else [raw_images]
 
-        path_list = []
-        if image_list:
-            dir_path = os.path.join(IMAGE_SAVE_DIR, processed_data['uuid'])
-            os.makedirs(dir_path, exist_ok=True)
-            for index, img in enumerate(image_list):
-                save_path = os.path.join(dir_path, f"{index}.png")
-                path = save_image_path(img, save_path)
-                path_list.append(path)
+        # path_list = []
+        # if image_list:
+        #     dir_path = os.path.join(IMAGE_SAVE_DIR, processed_data['uuid'])
+        #     os.makedirs(dir_path, exist_ok=True)
+        #     for index, img in enumerate(image_list):
+        #         save_path = os.path.join(dir_path, f"{index}.png")
+        #         path = save_image_path(img, save_path)
+        #         path_list.append(path)
 
         async def safe_call(coro):
             try:

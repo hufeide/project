@@ -20,7 +20,7 @@ sys.path.append(project_root)
 
 
 # VLLM URL 配置
-VLLM_URL_OCR = "http://192.168.1.212:10020/v1/chat/completions"
+VLLM_URL_OCR = "http://192.168.1.159:10050/v1/chat/completions"
 DEFAULT_MODEL_OCR = "" # 示例模型名
 
 

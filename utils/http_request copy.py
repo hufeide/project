@@ -2,7 +2,7 @@
 import requests, inspect
 from enum import Enum, IntEnum, StrEnum
 from dataclasses import dataclass, is_dataclass, asdict, field
-from typing import Optional, List, Dict, Any, TypeVar, Generic, Type, Union, Tuple
+from typing import Optional, List, Dict, Any, TypeVar, Generic, Type, Union
 
 # ==================================#
 # 配置
@@ -157,9 +157,9 @@ class SubjectEnum(StrEnum):
 
 """学科ID """
 class SubjectIdEnum(IntEnum):
-    CHINESE = 23 # 语文
-    MATH = 24 # 数学
-    ENGLISH = 25 # 英语
+    CHINESE = 23
+    MATH = 24
+    ENGLISH = 25
 
 """地区 """
 class AreaEnum(StrEnum):
@@ -211,34 +211,22 @@ class AreaEnum(StrEnum):
 
 """任务类型 """
 class TaskTypeEnum(IntEnum):
-    PREPARE_TASK = 1 # 准备任务
-    ANALYSIS_TASK = 5 # 试题分析、答题分析任务
-    DIFFICULTY_TASK = 6 # 难易度任务
-    RUBRIC_TASK = 7 # 评分量表任务
+    PREPARE_TASK = 1
+    ANALYSIS_TASK = 5
+    DIFFICULTY_TASK = 6
+    RUBRIC_TASK = 7
 
 """任务组状态 """
 class TaskGroupStatusEnum(IntEnum):
-    INIT = 0 # 初始化
-    RUNNING = 1 # 进行中
-    FINISHED = 2 # 已完成
+    INIT = 0
+    RUNNING = 1
+    FINISHED = 2
 
 """任务状态 """
 class TaskStatusEnum(IntEnum):
-    INIT = 0 # 初始化
-    RUNNING = 1 # 进行中
-    CHECK_IS_SUCCESS = 2 # 校验通过待抽检
-    CHECK_IS_FAILED = 3 # 校验不通过待审核
-    FINISHED = 4 # 已完成
-    SYNCHRONIZED = 5 # 已同步
-    FAILED = 6 # 失败
-
-"""任务步骤 """
-class TaskStepEnum(IntEnum):
-    DATA_CLEAN = 1 # 格式清理
-    ANSWER_CHECK = 2 # 答案判断
-    KNOWLEDGE_CHECK = 3 # 知识点判断
-    QUESTION_TYPE_CHECK = 4 # 题型判断
-    MATH_DRAW = 5 # 数学画图
+    INIT = 0
+    RUNNING = 1
+    FINISHED = 2
 
 """系列状态 """
 class SeriesEnum(StrEnum):
@@ -249,18 +237,6 @@ class SeriesEnum(StrEnum):
 class StudySectionEnum(StrEnum):
     ZHONG_ZHI = "中职"
     PU_GAO = "普高"
-
-"""比较结果是否一致 """
-class CompareResultEnum(IntEnum):
-    NO = 0
-    YES = 1
-
-"""子任务类型 """
-class SubTaskTypeEnum(IntEnum):
-    ANSWER_CHECK = 1 # 答案判断
-    KNOWLEDGE_CHECK = 2 # 知识点判断
-    QUESTION_TYPE_CHECK = 3 # 题型判断
-    MATH_DRAW = 4 # 数学画图
 
 """能力层级映射 """
 CH_ABILITY_LEVEL_DICT = {
@@ -307,7 +283,6 @@ class TaskDetailQuery:
     questionType: Optional[str] = None
     knowledge: Optional[str] = None  # 知识点
     uuid: Optional[str] = None  # uuid
-    subTaskType: Optional[SubTaskTypeEnum] = None # 子任务类型
 
 @dataclass
 class TaskGroupItem:
@@ -385,12 +360,11 @@ class TaskDetailItem:
     # === 知识点与内容类 ===
     knowledgeCode: Optional[str] = None     # 知识点编码
     knowledge: Optional[str] = None         # 知识点名称
-    material: Optional[str] = None           # 材料
-    questionMaterial: Optional[str] = None   # 试题材料
+    materia: Optional[str] = None           # 材料
+    questionMateria: Optional[str] = None   # 试题材料
     stem: Optional[str] = None              # 题干
     questionStem: Optional[str] = None      # 试题题干
     answer: Optional[str] = None            # 答案
-    cleanAnswer: Optional[str] = None # 清洗后答案
     analysis: Optional[str] = None          # 解析
     answerAnalysis: Optional[str] = None    # 答案解析
     compareResult: Optional[str] = None     # 对比结果
@@ -427,7 +401,7 @@ class TaskGroupUpdate:
 class TaskDetailUpdate:
     taskId: int
     taskStatus: Optional[TaskStatusEnum] = None
-    taskStep: Optional[TaskStepEnum] = None
+    taskStep: Optional[int] = None
 
 """子任务更新对象 """
 @dataclass
@@ -451,7 +425,6 @@ class ModelRecordAdd:
     parsedStatus: Optional[int] = None
     outputParsedResult1: Optional[int] = None
     outputParsedResult2: Optional[int] = None
-    outputParsedResult3: Optional[int] = None
 
 """模型比对结果添加对象 """
 @dataclass
@@ -463,15 +436,13 @@ class ModelCompareResultAdd:
     modelName1: Optional[str] = None # 模型1名称
     modelName2: Optional[str] = None # 模型2名称
     compareModelName: Optional[str] = None # 比对模型名
-    compareResult: Optional[CompareResultEnum] = None # 比对结果是否一致
+    compareResult: Optional[str] = None # 比对结果
     reason: Optional[str] = None # 原因
     model1Result1: Optional[str] = None # 模型1结果1
     model1Result2: Optional[str] = None # 模型1结果2
-    model1Result3: Optional[str] = None # 模型1结果3
     model2Result1: Optional[str] = None # 模型2结果1
     model2Result2: Optional[str] = None # 模型2结果2
-    model2Result3: Optional[str] = None # 模型1结果3
-    effectModel: Optional[int] = None # 生效模型(1模型一,2模型二)
+    effectModel: Optional[int] = None # 有效模型名
 
 """试题任务清晰数据更新对象 """
 @dataclass
@@ -483,13 +454,13 @@ class CleanDataUpdate:
     uuid: Optional[str] = None
     material: Optional[str] = None # 清洗后材料
     stem: Optional[str] = None # 清洗后题干
-    cleanAnswer: Optional[str] = None # 清理后答案
 
     needDraw: Optional[int] = None # 是否需要画图 0否 1是
     drawPath: Optional[str] = None # 画图路径
     docPath: Optional[str] = None # 文件路径（计算机）
     imagePath: Optional[str] = None # 图片路径（计算机）
     solveProblem: Optional[str] = None # 解题过程
+    cleanAnswer: Optional[str] = None # 清洗后答案
 
 """提示词查询请求对象 """
 @dataclass
@@ -596,57 +567,6 @@ class TaskDetailService(BaseAPIClient):
         response_data = self.get("api/task/detail/list", params=query)
         return ApiQueryResponse.from_dict(response_data, item_class=TaskDetailItem)
 
-    def get_item_by_list(self,
-                         task_group_item: TaskGroupItem,
-                         index: int,
-                         page_size: int = 100,
-                         last_query_res: ApiQueryResponse[TaskDetailItem] = None,
-                         task_detail_query: TaskDetailQuery = None) \
-            -> Tuple[Optional[TaskDetailItem], ApiQueryResponse[TaskDetailItem], int]:
-        """
-        通过全局索引获取单条数据，返回: (数据项, 响应缓存, 总条数)
-        """
-
-        # 1. 计算目标页码和页内相对索引
-        target_page = (index // page_size) + 1
-        local_index = index % page_size
-
-        # 2. 检查缓存是否有效 (是否存在且页码匹配)
-        is_cache_valid = (
-                last_query_res is not None and
-                getattr(last_query_res, '_page_no', None) == target_page
-        )
-
-        if not is_cache_valid:
-            # 构造分页查询对象
-            if task_detail_query is None:
-                task_detail_query = TaskDetailQuery(
-                    taskGroupId=task_group_item.id,
-                    subjectId=task_group_item.subjectId,
-                    taskType=task_group_item.taskType
-                )
-            else:
-                task_detail_query.taskGroupId=task_group_item.id
-                task_detail_query.subjectId=task_group_item.subjectId
-                task_detail_query.taskType=task_group_item.taskType
-            task_detail_query.pageNum=target_page
-            task_detail_query.pageSize=page_size
-            # 发起网络请求
-            last_query_res = self.get_list(task_detail_query)
-            # 注入当前页码标识，用于下次调用时的缓存比对
-            setattr(last_query_res, '_page_no', target_page)
-
-        # 3. 获取总条数 (如果接口未返回则默认为 0)
-        total_count = getattr(last_query_res, 'total', 0)
-
-        # 4. 边界检查：如果 index 越界（超过总数或当前页实际返回数）
-        if not last_query_res.rows or local_index >= len(last_query_res.rows):
-            return None, last_query_res, total_count
-
-        # 5. 返回结果：(数据, 响应对象, 总数)
-        return last_query_res.rows[local_index], last_query_res, total_count
-
-
     def update_clean_data(self, data: CleanDataUpdate) -> ApiResponse:
         response_data = self.put("api/task/update", data=data)
         return ApiResponse.from_dict(response_data)
@@ -733,60 +653,18 @@ def _test_model_compare_service():
 
 def _test_prompt_service():
     prompt_service = PromptService()
-    query_params = PromptQuery(
-        SubjectEnum.CHINESE,
-
-    )
+    query_params = PromptQuery()
 
 def _test_fodder_service():
     fodder_service = FodderService()
     fodder_query = FodderQuery(subject=SubjectEnum.CHINESE,
-                               area=AreaEnum.GUANG_DONG,
-                               # area="广东省",
+                               # area=AreaEnum.GUANG_DONG,
+                               area="广东省",
                                series=SeriesEnum.YING_SHI,
                                studySection=StudySectionEnum.ZHONG_ZHI,
                                taskType=TaskTypeEnum.ANALYSIS_TASK)
     fodder_res = fodder_service.get_list(query=fodder_query)
     print(f"fodder_res: {fodder_res}")
-
-def _test_get_item_by_list():
-
-    task_group_service = TaskGroupService()
-    query_params = TaskGroupQuery(subjectId=SubjectIdEnum.MATH,
-                                  taskType=TaskTypeEnum.PREPARE_TASK,
-                                  area=AreaEnum.GUANG_DONG,
-                                  series=SeriesEnum.YING_SHI)
-    task_res = task_group_service.get_list(query=query_params)
-
-    group_info = task_res.rows[0]
-    # for row in task_res.rows:
-    #     if row.id == 564:
-    #         group_info = row
-
-    print(f"group_info: \n{group_info}")
-
-    task_detail_service = TaskDetailService()
-    res = None
-    index = 0
-    total = 1  # 初始设为 1 进入循环
-    task_detail_query = TaskDetailQuery(
-        taskGroupId=group_info.id,
-        subjectId=SubjectIdEnum.MATH,
-        taskType=TaskTypeEnum.ANALYSIS_TASK,
-        questionType="解答题",
-        subTaskType=SubTaskTypeEnum.ANSWER_CHECK
-    )
-    while index < total:
-        # 每次调用都会自动处理：[内存取数据] 或 [跨页发起请求]
-        item, res, total = task_detail_service.get_item_by_list(group_info, index, last_query_res=res,
-                                                                task_detail_query=task_detail_query)
-
-        if item:
-            print(f"进度: {index + 1}/{total} - 处理任务: {item.taskId}")
-            # 执行业务逻辑
-        index += 1
-
-    print("全量数据轮询处理完毕！")
 
 if __name__ == '__main__':
 
@@ -795,6 +673,5 @@ if __name__ == '__main__':
     # _test_update_all_task_service()
 
     # _test_fodder_service()
-    _test_get_item_by_list()
 
     print(f"__main__ done...")

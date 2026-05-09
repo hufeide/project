@@ -28,17 +28,26 @@ ENV_PATH = os.path.join(PROJECT_ROOT, ".env")
 
 load_dotenv(ENV_PATH)
 
+# VLLM_CLIENTS = {
+#     "client1": AsyncOpenAI(
+#         api_key=os.getenv("VLLM_CLIENT1_API_KEY", ""),
+#         base_url=os.getenv("VLLM_CLIENT1_BASE_URL", "http://192.168.1.210:19000/v1"),
+#     ),
+#     "client2": AsyncOpenAI(
+#         api_key=os.getenv("VLLM_CLIENT2_API_KEY", ""),
+#         base_url=os.getenv("VLLM_CLIENT2_BASE_URL", "http://192.168.1.159:21000/v1"),
+#     ),
+# }
 VLLM_CLIENTS = {
     "client1": AsyncOpenAI(
         api_key=os.getenv("VLLM_CLIENT1_API_KEY", ""),
-        base_url=os.getenv("VLLM_CLIENT1_BASE_URL", "http://192.168.1.210:19000/v1"),
+        base_url=os.getenv("VLLM_CLIENT1_BASE_URL", "http://192.168.1.159:18000/v1"),
     ),
     "client2": AsyncOpenAI(
         api_key=os.getenv("VLLM_CLIENT2_API_KEY", ""),
-        base_url=os.getenv("VLLM_CLIENT2_BASE_URL", "http://192.168.1.159:21000/v1"),
+        base_url=os.getenv("VLLM_CLIENT2_BASE_URL", "http://192.168.1.159:18000/v1"),
     ),
 }
-
 ARK_CLIENT = Ark(
     base_url=os.getenv("ARK_BASE_URL", "https://ark.cn-beijing.volces.com/api/v3"),
     api_key=os.getenv("ARK_API_KEY", ""),
@@ -56,8 +65,8 @@ ARK_DEFAULT_PARAMS = {
 }
 
 VLLM_DEFAULT_PARAMS = {
-    "temperature": float(os.getenv("VLLM_TEMPERATURE", "0.7")),
-    "max_tokens": int(os.getenv("VLLM_MAX_TOKENS", "80000")),
+    "temperature": float(os.getenv("VLLM_TEMPERATURE", "0.5")),
+    "max_tokens": int(os.getenv("VLLM_MAX_TOKENS", "40000")),
 }
 
 IMAGE_SAVE_DIR = os.getenv(

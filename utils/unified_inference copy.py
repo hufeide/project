@@ -21,8 +21,7 @@ logger = get_logger("unified_inference")
 import os
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
-# from volcenginesdkarkruntime import Ark
-from volcenginesdkarkruntime import AsyncArk
+from volcenginesdkarkruntime import Ark
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 ENV_PATH = os.path.join(PROJECT_ROOT, ".env")
@@ -49,31 +48,25 @@ VLLM_CLIENTS = {
         base_url=os.getenv("VLLM_CLIENT2_BASE_URL", "http://192.168.1.159:18000/v1"),
     ),
 }
-ARK_CLIENT1 = AsyncArk(
-    base_url=os.getenv("ARK_CLIENT1_BASE_URL", "https://ark.cn-beijing.volces.com/api/v3"),
+ARK_CLIENT = Ark(
+    base_url=os.getenv("ARK_BASE_URL", "https://ark.cn-beijing.volces.com/api/v3"),
     api_key=os.getenv("ARK_API_KEY", ""),
 )
-ARK_CLIENT2 = AsyncArk(
-    base_url=os.getenv("ARK_CLIENT2_BASE_URL", "https://ark.cn-beijing.volces.com/api/v3"),
-    api_key=os.getenv("ARK_API_KEY", ""),
-)
-
-llm_method = os.getenv("LLM_METHOD", "vllm")
 
 ARK_MODELS = {
-    "doubao": os.getenv("ARK_MODEL_DOUBAO", "doubao-seed-1-6-250615"),
     "deepseek": os.getenv("ARK_MODEL_DEEPSEEK", "deepseek-v3-2-251201"),
+    "doubao": os.getenv("ARK_MODEL_DOUBAO", "doubao-seed-1-6-250615"),
 }
 
 ARK_DEFAULT_PARAMS = {
-    "temperature": float(os.getenv("ARK_TEMPERATURE", "0.5")),
+    "temperature": float(os.getenv("ARK_TEMPERATURE", "0.1")),
     "max_tokens": int(os.getenv("ARK_MAX_TOKENS", "60000")),
     "thinking": {"type": "enabled"},
 }
 
 VLLM_DEFAULT_PARAMS = {
     "temperature": float(os.getenv("VLLM_TEMPERATURE", "0.5")),
-    "max_tokens": int(os.getenv("VLLM_MAX_TOKENS", "50000")),
+    "max_tokens": int(os.getenv("VLLM_MAX_TOKENS", "40000")),
 }
 
 IMAGE_SAVE_DIR = os.getenv(
@@ -109,14 +102,7 @@ class UnifiedModelInference:
     """统一模型推理器"""
     
     def __init__(self):
-        if llm_method == "ark":
-            self.client1 = ARK_CLIENT1
-            self.client2 = ARK_CLIENT2
-            self.is_ark = True
-        else:
-            self.client1 = client1
-            self.client2 = client2
-            self.is_ark = False
+        self.client = ARK_CLIENT
         self.task_registry: Dict[str, TaskConfig] = {}
         self.task_processors: Dict[str, BaseTaskProcessor] = {}
         def _load_prompt(file_name: str) -> str:
@@ -366,8 +352,8 @@ class UnifiedModelInference:
         print("工作流: 双模型生成 + 比对")
         
         # 传递函数引用和参数，而不是直接传 awaitable
-        t1 = asyncio.create_task(self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
-        t2 = asyncio.create_task(self.safe_call(self._call_model, self.client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config))
+        t1 = asyncio.create_task(self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
+        t2 = asyncio.create_task(self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config))
         
         stage_tasks = [t1, t2]
         try:
@@ -395,7 +381,7 @@ class UnifiedModelInference:
                 # 修复：移除行尾逗号，正确传递参数
                 config_compare = copy.deepcopy(config)
                 config_compare.required_keys = {"correct", "better", "reason"}
-                comparison_result, _ = await self.safe_call(self._call_model, self.client2, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
+                comparison_result, _ = await self.safe_call(self._call_vllm, client2, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
         else:
             logger.warning("两个模型结果为空，无法进行比对")
             # results["model_judge"] = ""
@@ -433,7 +419,7 @@ class UnifiedModelInference:
         print("工作流: 双模型生成 + 比对")
         
         # 传递函数引用和参数，而不是直接传 awaitable
-        t1 = asyncio.create_task(self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
+        t1 = asyncio.create_task(self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
 
         stage_tasks = [t1]
         try:
@@ -463,7 +449,7 @@ class UnifiedModelInference:
                 # 修复：移除行尾逗号，正确传递参数
                 config_compare = copy.deepcopy(config)
                 config_compare.required_keys = {"correct", "better", "reason"}
-                comparison_result, _ = await self.safe_call(self._call_model, self.client1, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
+                comparison_result, _ = await self.safe_call(self._call_vllm, client1, task_consist, comparison_prompt, image_list, model_name="comparison_model", config=config_compare)
         else:
             logger.warning("两个模型结果为空，无法进行比对")
             # results["model_judge"] = ""
@@ -478,7 +464,8 @@ class UnifiedModelInference:
         
         # 逻辑：两个模型同时跑，谁先出结果且有效就用谁
         tasks = [
-            self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
+            self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
+            # self.safe_call(self._call_vllm, client2, sys_prompt, prompt, image_list, model_name="vllm_model2")
         ]
         responses = await asyncio.gather(*tasks, return_exceptions=True)
         for response in responses:
@@ -495,7 +482,7 @@ class UnifiedModelInference:
     async def _workflow_answer_difficulty(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
                                           image_list: List[str], config: TaskConfig) -> Dict[str, str]:
         """难度判定工作流"""
-        res, model_name = await self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="model1", config=config)
+        res, model_name = await self.safe_call(self._call_vllm, client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config)
         return {model_name: res}
 
     async def _call_vllm(self, client: AsyncOpenAI, sys_prompt: str, 
@@ -530,15 +517,7 @@ class UnifiedModelInference:
             logger.error(f"vLLM 调用失败: {e}")
             return ""
     
-    async def _call_model(self, client: AsyncOpenAI, sys_prompt: str, 
-                          prompt: str, image_list: List[str]) -> str:
-        """统一模型调用接口"""
-        if self.is_ark:
-            return await self._call_ark(client, sys_prompt, prompt, image_list)
-        else:
-            return await self._call_vllm(client, sys_prompt, prompt, image_list)
-    
-    async def _call_ark(self, client: AsyncOpenAI, sys_prompt: str, 
+    async def _call_ark(self, model_name: str, sys_prompt: str, 
                        prompt: str, image_list: List[str]) -> str:
         """调用 Ark 模型"""
         content = [{"type": "text", "text": prompt}]
@@ -552,11 +531,8 @@ class UnifiedModelInference:
         try:
             if asyncio.current_task().cancelled():
                 raise asyncio.CancelledError()
-            if client == self.client1:
-                model_name = ARK_MODELS["doubao"]
-            else:
-                model_name = ARK_MODELS["deepseek"]
-            completion =await client.chat.completions.create(
+                
+            completion = await self.client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": sys_prompt},

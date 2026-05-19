@@ -30,7 +30,7 @@ def pkl_json(pkl_path, json_path):
 
 
 def clean_html_text(html_content, start_num=1):
-    if not html_content:
+    if not html_content or html_content is None or pd.isna(html_content):
         return "", [], start_num
 
     # 1. 预处理：先干掉 HTML 里的 \r\n，防止它们被识别为文本节点

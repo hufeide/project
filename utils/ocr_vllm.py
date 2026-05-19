@@ -10,23 +10,79 @@ import asyncio
 import sys
 import logging
 import json
+import json
+import os
+import sys
+import re
+import ast
+import copy
+import pickle
+import logging
+import time
+import io
+import base64
+import asyncio
+import signal
+from typing import Dict, Any
+
+import numpy as np
+import pandas as pd
+from bs4 import BeautifulSoup
+from PIL import Image
+from multiprocessing import Process, Queue
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+from utils import (
+    extract_question_content,
+    is_valid_base64_image,
+
+)
+
+from utils.logger import get_logger
+
+from utils.image_utils import save_image_path
+
+logger = get_logger("task_analysis")
+
+# ================= 路径加载 =================
+current_dir = os.path.dirname(os.path.abspath(__file__))
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
 # --------------------------------------------------------------------
 # 导入和配置
 # --------------------------------------------------------------------
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
+import base64
+from io import BytesIO
+from PIL import Image
+
+def get_image_size(image_b64):
+    # 去掉 data:image/png;base64, 前缀（如果有）
+    if "," in image_b64:
+        image_b64 = image_b64.split(",")[1]
+
+    image_data = base64.b64decode(image_b64)
+
+    image = Image.open(BytesIO(image_data))
+
+    return image.size   # (width, height)
 
 # VLLM URL 配置
-VLLM_URL_OCR = "http://192.168.1.159:10050/v1/chat/completions"
-DEFAULT_MODEL_OCR = "" # 示例模型名
+VLLM_URL_OCR = "http://192.168.1.210:10030/v1/chat/completions"
+DEFAULT_MODEL_OCR = "dots-mocr" # 示例模型名
 
 
-OCR_PROMPT = f"""
-OCR this image,only return the text content.
-""".strip()
+# OCR_PROMPT = f"""
+# OCR this image,only return the text content.
+# """.strip()
+
+OCR_PROMPT = """Extract the text content from this image."""
 # --------------------------------------------------------------------
 # 并发控制配置 (新增)
 # --------------------------------------------------------------------
@@ -36,6 +92,100 @@ OCR_MAX_CONCURRENCY = 5
 # -------------------------------------------------------------------
 # 辅助函数（_single_image_ocr, call_vllm_ocr, call_vllm_grade, parse_string_to_json, build_rubric_prompt）
 # --------------------------------------------------------------------
+# 使用新的统一推理器
+async def process_questions_with_ocr(df: pd.DataFrame):
+    datas = df.to_dict(orient='records')
+    all_question = []
+    required_fields = ['subject', 'questionStem', 'questionType', 'questionNo', 'knowledgeCode', 'knowledge']
+
+    for index, data in enumerate(datas):
+        uuid = data.get('uuid')
+        # if uuid != "aeea787a-1bf2-402c-bc7e-31ee4f182698":
+        #     continue
+        if any(data.get(field) is None or data.get(field) == "" for field in required_fields):
+            continue    
+        subject = data['subject']
+        level = data['abilityLevel']
+        question_no = data['questionNo']
+        question_type = data['questionType']
+        know_md = data['knowledgemd']
+        answer_type_prompt_one = data['answer_type_prompt_one']
+        answer_type_example_one = data['answer_type_example_one']
+
+        question_dict = extract_question_content(data['questionMaterial'], data['questionStem'], data['answer'])
+        material_text = question_dict['material']
+        question_text = question_dict['question']
+        answer_text = question_dict['answer']
+        images_list = question_dict['images_pool']
+
+        images_list_valid = [x for x in images_list if is_valid_base64_image(x)]
+        if len(images_list_valid) != len(images_list):
+            raise ValueError(f"Question {index + 1} has {len(images_list_valid)} valid images out of {len(images_list)} total images")
+        images_list = images_list_valid
+        ocr_images = True
+        IMAGE_SAVE_DIR = os.path.join(os.path.dirname(current_dir), "data", "png")
+        TXT_SAVE_DIR = os.path.join(os.path.dirname(current_dir), "data", "txt")
+        os.makedirs(IMAGE_SAVE_DIR, exist_ok=True)
+        if len(images_list) > 0 and ocr_images:
+            if os.path.exists(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt")):
+                with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "r") as f:
+                    ocr_text = f.readlines()
+                for i, text in enumerate(ocr_text, 1):
+                    text_replace = "【"+ text +"】"
+                    material_text = material_text.replace(f"【图片{i}】", text_replace)
+                    question_text = question_text.replace(f"【图片{i}】", text_replace)
+                images_list = []
+            else:
+                ocr_text = await call_vllm_ocr(images_list)
+                ocr_text = [x.strip().replace("•", "").replace("*", "").replace("◆", "") if x else "" for x in ocr_text]
+                os.makedirs(TXT_SAVE_DIR, exist_ok=True)
+                # with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "w") as f:
+                #     f.write("\n".join(ocr_text))
+                with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "w", encoding="utf-8") as f:
+                    f.write(" ".join(" ".join(item.split()) for item in ocr_text))
+                for i, text in enumerate(ocr_text, 1):
+                    text_replace = "【"+ text +"】"
+                    material_text = material_text.replace(f"【图片{i}】", text_replace)
+                    question_text = question_text.replace(f"【图片{i}】", text_replace)
+                path_list = []
+                if images_list:
+                    dir_path = os.path.join(IMAGE_SAVE_DIR, uuid)
+                    os.makedirs(dir_path, exist_ok=True)
+                    for index, img in enumerate(images_list):
+                        save_path = os.path.join(dir_path, f"{index}.png")
+                        path = save_image_path(img, save_path)
+                        path_list.append(path)
+                images_list = []
+
+        uuid_one = data.get('uuid')
+        knowledgeCode = data.get("knowledgeCode")
+        knowledge_name = data.get("knowledge")
+        answer_system = data.get("answer_system_prompt_one")
+        task = data.get("task")
+        question_dict_one = {
+            'uuid': uuid_one,
+            'question_no': question_no,
+            'org_material': data['questionMaterial'],
+            'org_question': data['questionStem'],
+            'org_answer': data['answer'],
+            'material': material_text,
+            'question': question_text,
+            'answer': answer_text,
+            'question_type': question_type,
+            'knowledgeCode': knowledgeCode,
+            'knowledge_name': knowledge_name,
+            'level': level,
+            'knowledge': know_md,
+            'promote_head': answer_system,
+            'promote_out': answer_type_prompt_one,
+            'answer_example': answer_type_example_one,
+            'task': task,  # 关键：指定任务类型
+            'image_list': images_list,
+            'data': data
+        }
+
+        all_question.append(question_dict_one)
+    return all_question
 
 async def _single_image_ocr(image_b64: str, model: str = DEFAULT_MODEL_OCR, semaphore: asyncio.Semaphore = None) -> str:
     """ 
@@ -81,8 +231,11 @@ async def _single_image_ocr(image_b64: str, model: str = DEFAULT_MODEL_OCR, sema
         logger.error(f"VLLM OCR 单图片请求超时 ({OCR_TIMEOUT}s)。")
         raise RuntimeError(f"VLLM OCR 单图片请求超时 ({OCR_TIMEOUT}s)。")
     except httpx.HTTPStatusError as e:
-        logger.error(f"VLLM OCR 失败: HTTP {e.response.status_code}")
-        raise RuntimeError(f"VLLM OCR 失败: HTTP {e.response.status_code}")
+        if get_image_size(image_b64)[0] <= 1 or get_image_size(image_b64)[1] <= 1:
+            return ""
+        else:
+            logger.error(f"VLLM OCR 失败: HTTP {e.response.status_code}")
+            raise RuntimeError(f"VLLM OCR 失败: HTTP {e.response.status_code}")
     except httpx.RequestError as e:
         logger.error(f"VLLM OCR 请求失败: {e}")
         raise RuntimeError(f"VLLM OCR 请求失败")

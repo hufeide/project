@@ -67,8 +67,8 @@ def upload_knowledge(item: Dict[str, Any],all_results_m: Dict[str, Any]):
         modelName1 = '题库',
         modelName2 = 'vllm_model2',
         compareModelName = 'vllm_model3',
-        compareResult = str(1 if all_results_m.get('results', {}).get('comparison_result', {}).get('human_correct') == "是" else 0),
-        reason = all_results_m.get('results', {}).get('comparison_result', {}).get('reason'),
+        compareResult = str(1 if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是" else 0),
+        reason = all_results_m.get('results', {}).get('vllm_model1', {}).get('reason'),
         model1Result1 = all_results_m['knowledgeCode'],
         model1Result2 = all_results_m['knowledge_name'],
         model1Result3 = all_results_m['question_type'],
@@ -102,12 +102,12 @@ def upload_knowledge(item: Dict[str, Any],all_results_m: Dict[str, Any]):
         modelName="vllm_model3", # 传入数字也可以自动转为枚举
         flow="最终结果",
         modelInput="",
-        modelOutput=str(1 if all_results_m.get('results', {}).get('comparison_result', {}).get('correct') == "是" else 0),
+        modelOutput=str(1 if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是" else 0),
         outputParsedResult1 = "",
         outputParsedResult2 = "",
         outputParsedResult3 = ""
     )
-    if all_results_m.get('results', {}).get('comparison_result', {}).get('correct') == "是":
+    if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是":
         taskStatus = 2
     else:
         taskStatus = 3
@@ -145,8 +145,8 @@ def upload_answer_correct(item: Dict[str, Any],all_results_m: Dict[str, Any]):
         modelName1 = '题库',
         modelName2 = 'vllm_model2',
         compareModelName = 'vllm_model3',
-        compareResult = str(1 if all_results_m.get('results', {}).get('comparison_result', {}).get('human_correct') == "是" else 0),
-        reason = all_results_m.get('results', {}).get('comparison_result', {}).get('reason'),
+        compareResult = str(1 if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是" else 0),
+        reason = all_results_m.get('results', {}).get('vllm_model1', {}).get('reason'),
         model1Result1 = all_results_m['answer'],
         model2Result1 = all_results_m['results']['vllm_model1']['question_answer'],
         effectModel = int(1),
@@ -172,12 +172,12 @@ def upload_answer_correct(item: Dict[str, Any],all_results_m: Dict[str, Any]):
         modelName="vllm_model3", # 传入数字也可以自动转为枚举
         flow="最终结果",
         modelInput="",
-        modelOutput=str(1 if all_results_m.get('results', {}).get('comparison_result', {}).get('correct') == "是" else 0),
+        modelOutput=str(1 if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是" else 0),
         outputParsedResult1 = "",
         outputParsedResult2 = "",
         outputParsedResult3 = ""
     )
-    if all_results_m.get('results', {}).get('comparison_result', {}).get('correct') == "是":
+    if all_results_m.get('results', {}).get('vllm_model1', {}).get('human_correct') == "是":
         taskStatus = 2
     else:
         taskStatus = 3
@@ -414,11 +414,12 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
     等价于原 Flask 接口 /difficulty_jud
     使用新的统一架构
     """
-    result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task)
-    os.makedirs(result_dir, exist_ok=True)
+
     logger.info(f"Received {task} request")
     if 1 == 1:
         for index, item in enumerate(datas):
+            result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
+            os.makedirs(result_dir, exist_ok=True)
             pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
             if os.path.exists(pkl_path):
                 # continue
@@ -447,7 +448,7 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
                     if task=="answer_knowledge":
                         upload_knowledge(item, all_results_m)
                         continue
-            if 1==2:
+            if 1==1:
                 try:
                     # 使用新的统一推理器
                     all_results = qa_system.batch_inference([item], max_workers=10)
@@ -465,6 +466,38 @@ def process_question(datas: Dict[str, Any], task: str) -> Dict[str, Any]:
                     logger.error(f"处理项目 {item.get('uuid', 'unknown')} 时出错: {e}")
                     continue
 
+                for index, item in enumerate(datas):
+                    result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
+                    os.makedirs(result_dir, exist_ok=True)
+                    pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
+                    if os.path.exists(pkl_path):
+                        # continue
+                        all_results_m = pickle.load(open(pkl_path, 'rb'))
+                        if task in ["answer_analysis"]:
+                            if all_results_m['results']['vllm_model1']['试题分析'] != "" and all_results_m['results']['vllm_model2']['答题分析'] != "":
+                                upload_analysis(item, all_results_m)
+                                continue
+                        
+                        if task in ["answer_correct_gen" , "answer_knowledge_gen"]:
+                            if all_results_m['results']['comparison_result']['is_valid'] != "":
+                                continue
+                            if task=="answer_correct_gen":
+                                upload_answer_gen(item, all_results_m)
+                                continue
+                            if task=="answer_knowledge_gen":
+                                upload_knowledge_gen(item, all_results_m)
+                                continue
+                        
+                        if task in ["answer_correct" , "answer_knowledge"]:
+                            if all_results_m['results']['vllm_model1']['is_valid'] != True:
+                                continue
+                            if task=="answer_correct":
+                                upload_answer_correct(item, all_results_m)
+                                continue
+                            if task=="answer_knowledge":
+                                upload_knowledge(item, all_results_m)
+                                continue
+
 
 if __name__ == "__main__":
     # 设置信号处理器
@@ -477,7 +510,7 @@ if __name__ == "__main__":
     
     import argparse
     parser = argparse.ArgumentParser(description='运行任务分析')
-    parser.add_argument('--task', type=str, default='answer_knowledge_gen', 
+    parser.add_argument('--task', type=str, default='answer_analysis', 
                         choices=['answer_analysis', 'answer_correct', 'answer_knowledge', 'answer_correct_gen', 'answer_knowledge_gen'],
                         help='任务类型')
     args = parser.parse_args()
@@ -488,27 +521,49 @@ if __name__ == "__main__":
     print(f"=== 当前任务: {task} ===")
     
     # file_path = '/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/难易度/global/ai_model_apply_py/data/260323_chinese_json.json'
+    if task =="answer_analysis":
+        task_type_now = 5
+    elif task == "answer_correct":
+        task_type_now = 2
+    elif task == "answer_knowledge":
+        task_type_now = 3
     tasks = []
     mode = "request"
     if mode == "local":
         tasks = get_task_from_json()
     else:
-        taskgroup = get_taskgroup(subject="语文", task_type=5)['rows']
+        taskgroup = get_taskgroup(subject="语文", task_type=task_type_now)['rows']
         for taskgroup_one in taskgroup:
             taskgroup_id = taskgroup_one['id']
             tasktype = taskgroup_one['taskType']
             subjectid = taskgroup_one['subjectId']
-            # if taskgroup_id != 571:
+            # if taskgroup_id not in [8780]:
             #     continue
             tasks.extend(get_taskgroup_list(taskgroup_id, tasktype,subjectid)['rows'])
     
-    tasks = tasks[:50]
-    
+    # tasks = tasks[:100]
+    task_name_list = []
+    for task_one in tasks:
+        if task_type_now == 3:
+            if task == 'answer_knowledge':
+                if task_one['knowledgeCode'] == "" or task_one['questionType'] == "":
+                    task_name_list.append('answer_knowledge_gen')
+                else:
+                    task_name_list.append(task)
+        elif task_type_now == 2:
+            if task == 'answer_correct':
+                if task_one['answer'] == "" :
+                    task_name_list.append('answer_correct_gen')
+                else:
+                    task_name_list.append(task)
+        else:
+            task_name_list.append(task)
+
+
     knowledge_dict = pd.read_excel("/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/广东语文应试知识点.xlsx")
     knowledge_dict.columns = ['id','section','knowledgeCode', 'knowledge','knowledge_detail']
     df = pd.DataFrame(tasks)
 
-    
     df.rename(columns={
         'context': 'questionMateria',
         'question': 'questionStem',
@@ -541,7 +596,9 @@ if __name__ == "__main__":
             else:
                 return f.read()
     # task ="answer_analysis"# "answer_correct" # "answer_analysis"#"answer_knowledge"#"answer_correct_gen" # "answer_knowledge_gen"#
-    df['task'] = task
+    df['task'] = task_name_list
+    df = df[df['taskStatus'] == 0]
+    df = df[df['task'] == task]
     if task == "answer_analysis":
         answer_system = load_prompt('task_answer_analysis_sys.txt')
         answer_type_example = load_prompt('example_answer_analysis.json')
@@ -633,24 +690,35 @@ if __name__ == "__main__":
             TXT_SAVE_DIR = os.path.join(os.path.dirname(current_dir), "data", "txt")
             os.makedirs(IMAGE_SAVE_DIR, exist_ok=True)
             if len(images_list) > 0 and ocr_images:
-                ocr_text = await call_vllm_ocr(images_list)
-                ocr_text = [x.strip().replace("•", "").replace("*", "").replace("◆", "") if x else "" for x in ocr_text]
-                os.makedirs(TXT_SAVE_DIR, exist_ok=True)
-                with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "w") as f:
-                    f.write("\n".join(ocr_text))
-                for i, text in enumerate(ocr_text, 1):
-                    text_replace = "【"+ text +"】"
-                    material_text = material_text.replace(f"【图片{i}】", text_replace)
-                    question_text = question_text.replace(f"【图片{i}】", text_replace)
-                path_list = []
-                if images_list:
-                    dir_path = os.path.join(IMAGE_SAVE_DIR, uuid)
-                    os.makedirs(dir_path, exist_ok=True)
-                    for index, img in enumerate(images_list):
-                        save_path = os.path.join(dir_path, f"{index}.png")
-                        path = save_image_path(img, save_path)
-                        path_list.append(path)
-                images_list = []
+                if os.path.exists(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt")):
+                    with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "r") as f:
+                        ocr_text = f.readlines()
+                    for i, text in enumerate(ocr_text, 1):
+                        text_replace = "【"+ text +"】"
+                        material_text = material_text.replace(f"【图片{i}】", text_replace)
+                        question_text = question_text.replace(f"【图片{i}】", text_replace)
+                    images_list = []
+                else:
+                    ocr_text = await call_vllm_ocr(images_list)
+                    ocr_text = [x.strip().replace("•", "").replace("*", "").replace("◆", "") if x else "" for x in ocr_text]
+                    os.makedirs(TXT_SAVE_DIR, exist_ok=True)
+                    # with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "w") as f:
+                    #     f.write("\n".join(ocr_text))
+                    with open(os.path.join(TXT_SAVE_DIR, f"{uuid}.txt"), "w", encoding="utf-8") as f:
+                        f.write(" ".join(" ".join(item.split()) for item in ocr_text))
+                    for i, text in enumerate(ocr_text, 1):
+                        text_replace = "【"+ text +"】"
+                        material_text = material_text.replace(f"【图片{i}】", text_replace)
+                        question_text = question_text.replace(f"【图片{i}】", text_replace)
+                    path_list = []
+                    if images_list:
+                        dir_path = os.path.join(IMAGE_SAVE_DIR, uuid)
+                        os.makedirs(dir_path, exist_ok=True)
+                        for index, img in enumerate(images_list):
+                            save_path = os.path.join(dir_path, f"{index}.png")
+                            path = save_image_path(img, save_path)
+                            path_list.append(path)
+                    images_list = []
 
             uuid_one = data.get('uuid')
             knowledgeCode = data.get("knowledgeCode")

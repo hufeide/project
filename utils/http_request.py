@@ -7,7 +7,7 @@ from typing import Optional, List, Dict, Any, TypeVar, Generic, Type, Union, Tup
 # ==================================#
 # 配置
 # ==================================#
-CONFIG_BASE_URL = "http://192.168.1.210:8070"
+CONFIG_BASE_URL = "http://192.168.1.210:8071"
 
 """基础 HTTP 客户端，处理通用请求逻辑 """
 class BaseAPIClient:
@@ -428,6 +428,13 @@ class TaskDetailUpdate:
     taskId: int
     taskStatus: Optional[TaskStatusEnum] = None
     taskStep: Optional[TaskStepEnum] = None
+    model1Duration: Optional[float] = None
+    model2Duration: Optional[float] = None
+    model3Duration: Optional[float] = None
+    prepareDuration: Optional[float] = None
+    duration: Optional[float] = None
+    beginTime: Optional[str] = None
+    endTime: Optional[str] = None
 
 """子任务更新对象 """
 @dataclass
@@ -452,6 +459,10 @@ class ModelRecordAdd:
     outputParsedResult1: Optional[int] = None
     outputParsedResult2: Optional[int] = None
     outputParsedResult3: Optional[int] = None
+    inputTokenNum: Optional[int] = None
+    outputTokenNum: Optional[int] = None
+    duration: Optional[float] = None
+    useType: Optional[int] = None # 0否 1是
 
 """模型比对结果添加对象 """
 @dataclass

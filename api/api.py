@@ -12,7 +12,7 @@ def get_taskgroup_list(task_group_id, task_type,subjectid):
     Returns:
         dict: 返回接口响应数据，包含 total, rows, code, msg 等字段
     """
-    url = f"http://192.168.1.210:8070/api/task/detail/list?taskGroupId={task_group_id}&subjectId={subjectid}&taskType={task_type}&pageSize=5000000&pageNum=1"
+    url = f"http://192.168.1.210:8071/api/task/detail/list?taskGroupId={task_group_id}&subjectId={subjectid}&taskType={task_type}&pageSize=5000000&pageNum=1"
     
     no_proxy_backup = os.environ.get('NO_PROXY', '')
     os.environ['NO_PROXY'] = '192.168.1.210,192.168.1.187,localhost,127.0.0.1'
@@ -51,7 +51,7 @@ def get_taskgroup(subject, task_type, area=None, series=None, question_type=None
     Returns:
         dict: 返回接口响应数据，包含 total, rows, code, msg 等字段
     """
-    url = "http://192.168.1.210:8070/api/taskgroup/list"
+    url = "http://192.168.1.210:8071/api/taskgroup/list"
     
     params = {
         "subject": subject,

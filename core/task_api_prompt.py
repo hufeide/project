@@ -18,6 +18,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from PIL import Image
 from multiprocessing import Process, Queue
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if BASE_DIR not in sys.path:
@@ -34,12 +35,15 @@ from utils import (
 from utils.ocr_vllm import process_questions_with_ocr
 from typing import List
 from utils.logger import get_logger
-from api.api import get_taskgroup_list,get_taskgroup
+from api.qiansheng_api import get_taskgroup_list,get_taskgroup,PromptService,TaskGroupUpdate,TaskGroupService
+from api.http_milvus import get_dict_text,get_background_text,query_question_analysis
 from utils.data_clean import get_task_from_json,knowledge_md,fill_example
 from utils.image_utils import save_image_path
 from utils.upload_fun import upload_analysis,upload_answer_gen,upload_knowledge_gen,upload_answer_correct,upload_knowledge
+from utils.http_request import TaskDetailService,TaskDetailUpdate
+
 logger = get_logger("task_analysis")
-from utils.http_request import PromptService,TaskGroupUpdate,TaskGroupService,ModelService,TaskDetailService,ModelCompareResultAdd,CleanDataUpdate,TaskDetailUpdate,ModelRecordAdd
+# from utils.http_request import PromptService,TaskGroupUpdate,TaskGroupService
 # ================= 路径加载 =================
 current_dir = os.path.dirname(os.path.abspath(__file__))
 PROMPT_DIR = os.path.join(BASE_DIR, "data/prompt_file/")
@@ -62,12 +66,86 @@ def load_prompt(file_name):
 # ================= 全局资源 =================
 knowledge_dict = pd.read_excel("/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/广东语文应试知识点.xlsx")
 knowledge_dict.columns = ['id','section','knowledgeCode', 'knowledge','knowledge_detail']
+use_online = 0
+def update_taskgroup_status(new_tasks):
+    try:
+        df = pd.DataFrame(new_tasks)
+        task_group_obj = TaskGroupService()
+        group_mask = (
+            df.groupby('taskGroupId')['taskStatus'].transform(lambda x: x.isin([2, 3]).all())
+        )
+        success_group_ids = df.loc[group_mask,'taskGroupId'].unique()
+        for group_id in success_group_ids:
+            
+            record_group = TaskGroupUpdate(
+                taskGroupId = int(group_id),
+                groupStatus = 2,
+            )
+            response = task_group_obj.update_status(record_group)
+            if response.code!=200:
+                logger.error(f"更新任务组状态失败，任务组ID：{group_id}")
+    except Exception as e:
+        logger.error(f"更新任务组状态失败，错误信息：{e}")
+
+
+def update_taskgroup_onlyfaild_status(new_tasks):
+    try:
+        df = pd.DataFrame(new_tasks)
+        task_group_obj = TaskGroupService()
+        group_mask = (
+            df.groupby('taskGroupId')['taskStatus'].transform(lambda x: x.isin([6]).all())
+        )
+        success_group_ids = df.loc[group_mask,'taskGroupId'].unique()
+        for group_id in success_group_ids:
+            
+            record_group = TaskGroupUpdate(
+                taskGroupId = int(group_id),
+                groupStatus = 2,
+            )
+            response = task_group_obj.update_status(record_group)
+            if response.code!=200:
+                logger.error(f"更新任务组状态失败，任务组ID：{group_id}")
+    except Exception as e:
+        logger.error(f"更新任务组状态失败，错误信息：{e}")
+
+
+def update_taskfail_status(task):
+    TaskDetail_Service = TaskDetailService()
+    task_id = task.get('taskId')
+    record3 = TaskDetailUpdate(
+        taskId = task_id,
+        taskStatus = 6,
+    )
+    TaskDetail_Service.update_status(record3)
 def task_preprocess(tasks,mode="local",task_name=None):
     """
     预处理任务数据
     """
-    df = pd.DataFrame(tasks)
+    valid_tasks = []
+    for task in tasks:
+        if task["task_name"] =='answer_analysis':
+            if not (task.get('knowledgeCode')=="" or task.get('knowledgeCode') is None or task.get('questionType')=="" or task.get('questionType') is None):
+                try:
+                    task['knowledgeCode'] = task.get('verifyKnowledgeCode') if task.get('verifyKnowledgeCode') else (task.get('knowledgeCode') or '').replace(" ", "")
+                    task['knowledge'] = task.get('verifyKnowledge') if task.get('verifyKnowledge') else (task.get('knowledge') or '').replace(" ", "")
+                    task['questionType'] = task.get('verifyQuestionType') if task.get('verifyQuestionType') else (task.get('questionType') or '').replace(" ", "")
+                    task['answer'] = task.get('verifyAnswer') if task.get('verifyAnswer') else (task.get('answer') or '').replace(" ", "")
+                    valid_tasks.append(task)
+                except:
+                    update_taskfail_status(task)
+                    pass
+            else:
+                update_taskfail_status(task)
+                pass
+        else:
+            valid_tasks.append(task)
     
+    if len(valid_tasks)==0:
+        update_taskgroup_onlyfaild_status(tasks)
+        return None
+    tasks = valid_tasks
+
+    df = pd.DataFrame(tasks)
     df.rename(columns={
         'context': 'questionMateria',
         'question': 'questionStem',
@@ -75,8 +153,8 @@ def task_preprocess(tasks,mode="local",task_name=None):
     }, inplace=True)
 
     group_mask = (
-    df.groupby('taskGroupId')['taskStatus']
-        .transform(lambda x: x.isin([2, 3]).all())
+        df.groupby('taskGroupId')['taskStatus']
+            .transform(lambda x: x.isin([2, 3, 6]).all())
     )
     task_group_obj = TaskGroupService()
     success_group_ids = df.loc[group_mask,'taskGroupId'].unique()
@@ -101,8 +179,8 @@ def task_preprocess(tasks,mode="local",task_name=None):
             logger.error(f"更新任务组状态失败，任务组ID：{group_id}")
 
 
-
-    df = df[df['taskStatus'] == 0] #0初始化、1进行中、2校验通过待抽检、3校验不通过待审核、4已完成5已同步6失败
+    #重要
+    df = df[df['taskStatus'].isin([0,1,6])] #0初始化、1进行中、2校验通过待抽检、3校验不通过待审核、4已完成5已同步6失败
     df['task'] = task_name
     prompt_obj = PromptService()
     query = {
@@ -124,36 +202,53 @@ def task_preprocess(tasks,mode="local",task_name=None):
     
     # df = df[df['task'] == task]
     if task_name == "answer_analysis":
-        answer_system = load_prompt('task_answer_analysis_sys.txt')
-        #answer_system =  response_data_df['systemPromptContent'][0]#
-        answer_type_example = load_prompt('example_answer_analysis.json')
-        answer_type_prompt = response_data_df.set_index('questionType')['taskPromptContent'].to_dict()#load_prompt('task_answer_analysis.json')
+        if use_online ==0:
+            answer_system = load_prompt('task_answer_analysis_sys.txt')
+            answer_type_prompt = load_prompt('task_answer_analysis.json')
+        else:
+            answer_system =  response_data_df['systemPromptContent'][0]
+            answer_type_prompt = response_data_df.set_index('questionType')['taskPromptContent'].to_dict()#load_prompt('task_answer_analysis.json')
+        
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = [answer_type_prompt.get(x) for x in df["questionType"]]
-        df["answer_type_example_one"] = [answer_type_example.get(x) for x in df["questionType"]]
-        answer_consist = pd.read_excel(os.path.join(PROMPT_DIR, "example_answer_analysis.xlsx"))
-        answer_consist["对应广东字典库条目"] = answer_consist["对应广东字典库条目"].ffill()
-        df["answer_type_example_one"] = df.apply(lambda row: fill_example(row, answer_consist), axis=1)
         # df.to_excel('/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/processed_data_0323.xlsx', index=False)
         ###知识
-        knowledge_md_obj = knowledge_md()
-        df['knowledgemd'] = df.apply(lambda x: knowledge_md_obj.get_knowledge_point(x['knowledgeCode']), axis=1)
-
+        if use_online==0:
+            answer_type_example = load_prompt('example_answer_analysis.json')
+            answer_consist = pd.read_excel(os.path.join(PROMPT_DIR, "example_answer_analysis.xlsx"))
+            answer_consist["对应广东字典库条目"] = answer_consist["对应广东字典库条目"].ffill()
+            df["answer_type_example_one"] = [answer_type_example.get(x) for x in df["questionType"]]
+            df["answer_type_example_one"] = df.apply(lambda row: fill_example(row, answer_consist), axis=1)
+            
+            knowledge_md_obj = knowledge_md()
+            df['knowledgemd'] = df.apply(lambda x: knowledge_md_obj.get_knowledge_point(x['knowledgeCode']), axis=1)
+        else:
+            df["answer_type_example_one"] = df.apply(lambda x: query_question_analysis(question_stem=x['material']+x['stem'], knowledgeCode=x['knowledgeCode'],questionType=x['questionType'],area=x['area'], series=x['series'], studySection=x['studySection']),  axis=1)
+            df['knowledgemd'] = df.apply(lambda x: get_background_text(subject="语文",knowledgeCode=x['knowledgeCode'], area=x['area'], series=x['series'], studySection=x['studySection'], taskType=5), axis=1)
     if task_name == "answer_knowledge":
-        answer_system = load_prompt('task_answer_knowledge_sys.txt')
-        #answer_system =  response_data_df['systemPromptContent'][0]
+        if use_online ==0:
+            answer_system = load_prompt('task_answer_knowledge_sys.txt')
+        else:
+            answer_system =  response_data_df['systemPromptContent'][0]
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = ""
         df["answer_type_example_one"] = ""
         
-        know_md = knowledge_dict[['section','knowledgeCode', 'knowledge','knowledge_detail']]
-        know_md.columns = ['板块','知识点代码', '知识点','知识点详情']
-        know_md.sort_values(by='板块', inplace=True)
+        if use_online ==0:
+            know_md = knowledge_dict[['section','knowledgeCode', 'knowledge','knowledge_detail']].copy()
+            know_md.columns = ['板块','知识点代码', '知识点','知识点详情']
+            know_md.sort_values(by='板块', inplace=True)
+        else:
+            know_md = get_dict_text(subject="语文", area="广东省", series="应试", studySection="中职")
+            know_md = pd.DataFrame(know_md)
+            know_md.columns = ['板块id','板块','知识点代码', '知识点']
         df['knowledgemd'] = json.dumps(know_md.to_dict(orient='records'), ensure_ascii=False)
     
     if task_name == "answer_correct":
-        answer_system = load_prompt('task_answer_correct_sys.txt')
-        #answer_system =  response_data_df['systemPromptContent'][0]
+        if use_online ==0:
+            answer_system = load_prompt('task_answer_correct_sys.txt')
+        else:
+            answer_system =  response_data_df['systemPromptContent'][0]
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = ""
         df["answer_type_example_one"] = ""
@@ -161,21 +256,23 @@ def task_preprocess(tasks,mode="local",task_name=None):
 
     if task_name == "answer_correct_gen":
         answer_system = load_prompt('task_answer_correct_gen_sys.txt')
-        # answer_system =  response_data_df['systemPromptContent'][0]
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = ""
         df["answer_type_example_one"] = ""
         df['knowledgemd'] = ""
     if task_name == "answer_knowledge_gen":
         answer_system = load_prompt('task_answer_knowledge_gen_sys.txt')
-        # answer_system =  response_data_df['systemPromptContent'][0]
         df["answer_system_prompt_one"] = answer_system
         df["answer_type_prompt_one"] = ""
         df["answer_type_example_one"] = ""
-
-        know_md = knowledge_dict[['section','knowledgeCode', 'knowledge','knowledge_detail']]
-        know_md.columns = ['板块','知识点代码', '知识点','知识点详情']
-        know_md.sort_values(by='板块', inplace=True)
+        if use_online ==0:
+            know_md = knowledge_dict[['section','knowledgeCode', 'knowledge','knowledge_detail']]
+            know_md.columns = ['板块','知识点代码', '知识点','知识点详情']
+            know_md.sort_values(by='板块', inplace=True)
+        else:
+            know_md = get_dict_text(subject="语文", area="广东省", series="应试", studySection="中职")
+            know_md = pd.DataFrame(know_md)
+            know_md.columns = ['板块id','板块','知识点代码', '知识点']
         df['knowledgemd'] = json.dumps(know_md.to_dict(orient='records'), ensure_ascii=False)
     return df 
     
@@ -184,42 +281,82 @@ def process_question(datas: Dict[str, Any]) -> Dict[str, Any]:
     等价于原 Flask 接口 /difficulty_jud
     使用新的统一架构
     """
-
+    log_path = "/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/end_time.log"
+    if not os.path.exists(log_path):
+        end_time = datetime.now()
+        with open(log_path, "a") as f:
+            f.write(f"end_time: {end_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
     if 1 == 1:
-        for index, item in enumerate(datas):
+        for index, item in enumerate(datas):   
             task = item.get('task', "")
             result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
             os.makedirs(result_dir, exist_ok=True)
             pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
-            # if os.path.exists(pkl_path):
-            #     # continue
-            #     all_results_m = pickle.load(open(pkl_path, 'rb'))
-            #     if task in ["answer_analysis"]:
-            #         if all_results_m['results']['vllm_model1']['试题分析'] != "" and all_results_m['results']['vllm_model2']['答题分析'] != "":
-            #             upload_analysis(item, all_results_m)
-            #             continue
-                
-            #     if task in ["answer_correct_gen" , "answer_knowledge_gen"]:
-            #         if all_results_m['results']['comparison_result']['is_valid'] != "":
-            #             continue
-            #         if task=="answer_correct_gen":
-            #             upload_answer_gen(item, all_results_m)
-            #             continue
-            #         if task=="answer_knowledge_gen":
-            #             upload_knowledge_gen(item, all_results_m)
-            #             continue
-                
-            #     if task in ["answer_correct" , "answer_knowledge"]:
-            #         if all_results_m['results']['vllm_model1']['is_valid'] != True:
-            #             continue
-            #         if task=="answer_correct":
-            #             upload_answer_correct(item, all_results_m)
-            #             continue
-            #         if task=="answer_knowledge":
-            #             upload_knowledge(item, all_results_m)
-            #             continue
+            if os.path.exists(pkl_path):
+                result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
+                os.makedirs(result_dir, exist_ok=True)
+                pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
+                if os.path.exists(pkl_path):
+                    # continue
+                    all_results_m = pickle.load(open(pkl_path, 'rb'))
+                    if task in ["answer_analysis"]:
+                        if all_results_m['results']['vllm_model1']['试题分析'] != "" and all_results_m['results']['vllm_model2']['答题分析'] != "":
+                            upload_analysis(item, all_results_m)
+                            continue
+                        else:
+                            TaskDetail_Service = TaskDetailService()
+                            task_id = item.get('data', {}).get('taskId')
+                            record3 = TaskDetailUpdate(
+                                taskId = task_id,
+                                taskStatus = 6,
+                            )
+                            TaskDetail_Service.update_status(record3)
+                            continue
+                    
+                    if task in ["answer_correct_gen" , "answer_knowledge_gen"]:
+                        if all_results_m['results']['comparison_result']['is_valid'] != True:
+                            TaskDetail_Service = TaskDetailService()
+                            task_id = item.get('data', {}).get('taskId')
+                            record3 = TaskDetailUpdate(
+                                taskId = task_id,
+                                taskStatus = 6,
+                            )
+                            TaskDetail_Service.update_status(record3)
+                            continue
+                        if task=="answer_correct_gen":
+                            upload_answer_gen(item, all_results_m)
+                            continue
+                        if task=="answer_knowledge_gen":
+                            upload_knowledge_gen(item, all_results_m)
+                            continue
+                    
+                    if task in ["answer_correct" , "answer_knowledge"]:
+                        if all_results_m['results']['vllm_model1']['is_valid'] != True:
+                            TaskDetail_Service = TaskDetailService()
+                            task_id = item.get('data', {}).get('taskId')
+                            record3 = TaskDetailUpdate(
+                                taskId = task_id,
+                                taskStatus = 6,
+                            )
+                            TaskDetail_Service.update_status(record3)
+                            continue
+                        if task=="answer_correct":
+                            upload_answer_correct(item, all_results_m)
+                            continue
+                        if task=="answer_knowledge":
+                            upload_knowledge(item, all_results_m)
+                            continue
+                continue
+
             if 1==1:
                 try:
+                    TaskDetail_Service = TaskDetailService()
+                    task_id = item.get('data', {}).get('taskId')
+                    record3 = TaskDetailUpdate(
+                        taskId = task_id,
+                        taskStatus = 1,
+                    )
+                    TaskDetail_Service.update_status(record3)
                     # 使用新的统一推理器
                     all_results = qa_system.batch_inference([item], max_workers=10)
                     all_results_m = all_results[0] | item
@@ -233,47 +370,77 @@ def process_question(datas: Dict[str, Any]) -> Dict[str, Any]:
                     logger.info("收到中断信号，正在退出...")
                     sys.exit(130)
                 except Exception as e:
+                    # TaskDetail_Service = TaskDetailService()
+                    # task_id = item.get('data', {}).get('taskId')
+                    # record3 = TaskDetailUpdate(
+                    #     taskId = task_id,
+                    #     taskStatus = 6,
+                    # )
+                    # TaskDetail_Service.update_status(record3)
                     logger.error(f"处理项目 {item.get('uuid', 'unknown')} 时出错: {e}")
                     continue
 
-                for index, item in enumerate(datas):
-                    result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
-                    os.makedirs(result_dir, exist_ok=True)
-                    pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
-                    if os.path.exists(pkl_path):
-                        # continue
-                        all_results_m = pickle.load(open(pkl_path, 'rb'))
-                        if task in ["answer_analysis"]:
-                            if all_results_m['results']['vllm_model1']['试题分析'] != "" and all_results_m['results']['vllm_model2']['答题分析'] != "":
-                                upload_analysis(item, all_results_m)
-                                continue
-                        
-                        if task in ["answer_correct_gen" , "answer_knowledge_gen"]:
-                            if all_results_m['results']['comparison_result']['is_valid'] != "":
-                                continue
-                            if task=="answer_correct_gen":
-                                upload_answer_gen(item, all_results_m)
-                                continue
-                            if task=="answer_knowledge_gen":
-                                upload_knowledge_gen(item, all_results_m)
-                                continue
-                        
-                        if task in ["answer_correct" , "answer_knowledge"]:
-                            if all_results_m['results']['vllm_model1']['is_valid'] != True:
-                                continue
-                            if task=="answer_correct":
-                                upload_answer_correct(item, all_results_m)
-                                continue
-                            if task=="answer_knowledge":
-                                upload_knowledge(item, all_results_m)
-                                continue
+        # for index, item in enumerate(datas):
+            result_dir = os.path.join(os.path.dirname(current_dir), "data","result",task,str(item.get('data', {}).get('taskGroupId')))
+            os.makedirs(result_dir, exist_ok=True)
+            pkl_path = f'{result_dir}/{item["uuid"]}.pkl'
+            if os.path.exists(pkl_path):
+                # continue
+                all_results_m = pickle.load(open(pkl_path, 'rb'))
+                if task in ["answer_analysis"]:
+                    if all_results_m['results']['vllm_model1']['试题分析'] != "" and all_results_m['results']['vllm_model2']['答题分析'] != "":
+                        upload_analysis(item, all_results_m)
+                        continue
+                    else:
+                        TaskDetail_Service = TaskDetailService()
+                        task_id = item.get('data', {}).get('taskId')
+                        record3 = TaskDetailUpdate(
+                            taskId = task_id,
+                            taskStatus = 6,
+                        )
+                        TaskDetail_Service.update_status(record3)
+                        continue
+                
+                if task in ["answer_correct_gen" , "answer_knowledge_gen"]:
+                    if all_results_m['results']['comparison_result']['is_valid'] != True:
+                        TaskDetail_Service = TaskDetailService()
+                        task_id = item.get('data', {}).get('taskId')
+                        record3 = TaskDetailUpdate(
+                            taskId = task_id,
+                            taskStatus = 6,
+                        )
+                        TaskDetail_Service.update_status(record3)
+                        continue
+                    if task=="answer_correct_gen":
+                        upload_answer_gen(item, all_results_m)
+                        continue
+                    if task=="answer_knowledge_gen":
+                        upload_knowledge_gen(item, all_results_m)
+                        continue
+                
+                if task in ["answer_correct" , "answer_knowledge"]:
+                    if all_results_m['results']['vllm_model1']['is_valid'] != True:
+                        TaskDetail_Service = TaskDetailService()
+                        task_id = item.get('data', {}).get('taskId')
+                        record3 = TaskDetailUpdate(
+                            taskId = task_id,
+                            taskStatus = 6,
+                        )
+                        TaskDetail_Service.update_status(record3)
+                        continue
+                    if task=="answer_correct":
+                        upload_answer_correct(item, all_results_m)
+                        continue
+                    if task=="answer_knowledge":
+                        upload_knowledge(item, all_results_m)
+                        continue
 
 
 def fetch_tasks_periodically(
     subject: str = "语文",
     poll_interval: int = 60,
-    batch_size: int = 10,
-    max_pending_time: int = 300,
+    batch_size: int = 1,
+    max_pending_time: int = 10,
     task_types: List[str] = None,
     task_name: str = None,
 ):
@@ -290,6 +457,12 @@ def fetch_tasks_periodically(
     Returns:
         None
     """
+    log_path = "/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/data/begin_time.log"
+    if not os.path.exists(log_path):
+        begin_time = datetime.now()
+        with open(log_path, "a") as f:
+            f.write(f"start_time: {begin_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+
     if task_types is None:
         task_types = ['answer_analysis', 'answer_correct', 'answer_knowledge']#[task_name]#['answer_analysis', 'answer_correct', 'answer_knowledge']
     
@@ -322,12 +495,21 @@ def fetch_tasks_periodically(
             if task_name not in task_types:
                 continue
             try:
-                taskgroup = get_taskgroup(subject=subject, task_type=task_type)['rows']
+                if subject == "语文":
+                    subjectId = "23"
+                
+                taskgroup_0 = get_taskgroup(subjectId=subjectId, task_type=task_type,status = 0,page_size=100).rows
+                taskgroup_1 = get_taskgroup(subjectId=subjectId, task_type=task_type,status = 1,page_size=100).rows
+                taskgroup = taskgroup_0 + taskgroup_1
+                taskgroup = [x.to_dict() for x in taskgroup]
                 for taskgroup_one in taskgroup:
                     taskgroup_id = taskgroup_one['id']
                     tasktype = taskgroup_one['taskType']
                     subjectid = taskgroup_one['subjectId']
-                    tasks = get_taskgroup_list(taskgroup_id, tasktype, subjectid)['rows']
+                    tasks = get_taskgroup_list(taskgroup_id, tasktype, subjectid)
+                    update_taskgroup_status(tasks)
+                    tasks = [x.to_dict() for x in tasks]
+                    tasks = [x for x in tasks if x.get('taskStatus')  not in [2,3]]
                     for task in tasks:
                         task['task_name'] = task_name
                         task_id = task.get('id') or task.get('taskId')
@@ -336,10 +518,11 @@ def fetch_tasks_periodically(
                             pending_task_ids.add(task_id)
             except Exception as e:
                 logger.error(f"拉取任务失败: {e}")
+        
         return new_tasks
     
     def process_batch():
-        """处理当前批次的所有任务"""
+        """按任务组顺序处理当前批次的所有任务"""
         nonlocal pending_tasks, last_process_time
         
         if not pending_tasks:
@@ -351,30 +534,31 @@ def fetch_tasks_periodically(
         task_name_map = {}
         
         for item in pending_tasks:
+            task_group_id = str(item.get('taskGroupId', 'unknown'))
             task_name = item.get('task_name', 'answer_analysis')
             task_name_map[id(item)] = task_name
-            grouped_tasks[task_name].append(item)
+            grouped_tasks[task_group_id].append((task_group_id, task_name, item))
         
-        df_all = pd.DataFrame()
-        
-        for task_name, tasks in grouped_tasks.items():
+        # 按任务组ID顺序处理：一个任务组处理完后再处理下一个
+        for task_group_id, items in grouped_tasks.items():
             try:
+                tasks = [item[2] for item in items]
+                task_name = items[0][1] if items else 'answer_analysis'
+                logger.info(f"开始处理任务组ID {task_group_id}，共 {len(tasks)} 条，任务类型: {task_name}")
+                
                 df = task_preprocess(tasks, mode="request", task_name=task_name)
                 if df is not None and len(df) > 0:
-                    df_all = pd.concat([df_all, df], axis=0)
-            except Exception as e:
-                logger.error(f"预处理任务失败: {e}")
-        
-        if len(df_all) > 0:
-            try:
-                logger.info(f"开始处理 {len(df_all)} 条数据")
-                all_question = asyncio.run(process_questions_with_ocr(df_all))
-                if all_question:
-                    for task_name in grouped_tasks.keys():
+                    logger.info(f"任务组ID {task_group_id} 开始处理 {len(df)} 条数据")
+                    all_question = asyncio.run(process_questions_with_ocr(df))
+                    if all_question:
                         res = process_question(all_question)
-                        logger.info(f"任务类型 {task_name} 处理完成，结果: {res}")
+                        logger.info(f"任务组ID {task_group_id} 处理完成，结果: {res}")
+                    update_taskgroup_status(tasks)
+                else:
+                    logger.info(f"任务组ID {task_group_id} 预处理后无数据")
+
             except Exception as e:
-                logger.error(f"处理任务失败: {e}")
+                logger.error(f"处理任务组ID {task_group_id} 失败: {e}")
                 import traceback
                 logger.error(traceback.format_exc())
         
@@ -398,7 +582,7 @@ def fetch_tasks_periodically(
                 len(pending_tasks) >= batch_size or 
                 time_elapsed >= max_pending_time
             )
-            
+
             if should_process and pending_tasks:
                 process_batch()
             
@@ -428,16 +612,16 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, default='periodic',
                         choices=['single', 'periodic'],
                         help='运行模式: single(单次执行) 或 periodic(定时拉取任务)')
-    parser.add_argument('--task', type=str, default='answer_correct', 
+    parser.add_argument('--task', type=str, default='answer_analysis', 
                         choices=['answer_analysis', 'answer_correct', 'answer_knowledge', 'answer_correct_gen', 'answer_knowledge_gen'],
                         help='任务类型 (单次模式用)')
     parser.add_argument('--subject', type=str, default='语文',
                         help='学科类型')
     parser.add_argument('--poll-interval', type=int, default=60,
                         help='轮询间隔（秒），默认60秒')
-    parser.add_argument('--batch-size', type=int, default=10,
+    parser.add_argument('--batch-size', type=int, default=1,
                         help='批次大小，达到此数量立即处理，默认10')
-    parser.add_argument('--max-pending-time', type=int, default=300,
+    parser.add_argument('--max-pending-time', type=int, default=10,
                         help='最大等待时间（秒），超过此时间即使未达到批次大小也处理，默认300秒')
     args = parser.parse_args()
     
@@ -476,14 +660,27 @@ if __name__ == "__main__":
         if mode == "local":
             tasks = get_task_from_json()
         else:
-            taskgroup = get_taskgroup(subject="语文", task_type=task_type_now)['rows']
+            # taskgroup = get_taskgroup(subject="语文", task_type=task_type_now)#['rows']
+            # for taskgroup_one in taskgroup:
+            #     taskgroup_id = taskgroup_one['id']
+            #     tasktype = taskgroup_one['taskType']
+            #     subjectid = taskgroup_one['subjectId']
+            #     # if taskgroup_id not in [8780]:
+            #     #     continue
+            # tasks.extend(get_taskgroup_list(taskgroup_id, tasktype,subjectid))#['rows'])
+            subjectId = "23"
+            taskgroup_0 = get_taskgroup(subjectId=subjectId, task_type=task_type_now,status = 0,page_size=100).rows
+            taskgroup_1 = get_taskgroup(subjectId=subjectId, task_type=task_type_now,status = 1,page_size=100).rows
+            taskgroup = taskgroup_0 + taskgroup_1
+            taskgroup = [x.to_dict() for x in taskgroup]
+            tasks = []
             for taskgroup_one in taskgroup:
                 taskgroup_id = taskgroup_one['id']
                 tasktype = taskgroup_one['taskType']
                 subjectid = taskgroup_one['subjectId']
-                # if taskgroup_id not in [8780]:
-                #     continue
-            tasks.extend(get_taskgroup_list(taskgroup_id, tasktype,subjectid)['rows'])
+                tasks_one = get_taskgroup_list(taskgroup_id, tasktype, subjectid)
+                tasks_one = [x.to_dict() for x in tasks_one]
+                tasks.extend(tasks_one)
     
     # tasks = tasks[:2]
     task_name_list = []
@@ -504,7 +701,7 @@ if __name__ == "__main__":
             task_name_list.append(task)
     
     for i,item in enumerate(tasks):
-        item['task'] = task_name_list[i]
+        item['task_name'] = task_name_list[i]
 
     
     grouped_tasks = defaultdict(list)
@@ -512,7 +709,7 @@ if __name__ == "__main__":
     for i, item in enumerate(tasks):
         task_name = task_name_list[i]
 
-        item['task'] = task_name
+        item['task_name'] = task_name
         grouped_tasks[task_name].append(item)
 
     # 转成普通 dict
@@ -527,6 +724,9 @@ if __name__ == "__main__":
 
     all_question = asyncio.run(process_questions_with_ocr(df_all))
     res = process_question(all_question)
+# ps -ef | grep task_api_prompt.py
+# nohup python /data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py &> task_api_prompt.log 2>&1 &
+# python core/upload_api.py --task answer_analysis
 # python core/upload_api.py --task answer_analysis
 # python core/upload_api.py --task answer_correct
 # python core/upload_api.py --task answer_knowledge

@@ -29,7 +29,7 @@ def prompt_answer_knowledge(processed_data):
     知识点清单：{knowledge_text}
     {image_rule_text}
     # 请对根据以下【题目】完成任务：
-    题型：{question_type}
+    人工标记的题型：{question_type}
     人工标记的知识代码：{knowledgeCode}
     人工标记的知识点：{knowledge_name}
     level：{level}

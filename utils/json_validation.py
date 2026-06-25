@@ -125,8 +125,11 @@ def validate_single_json_string(json_str, required_keys):
 
     empty_dict = {key: "" for key in required_keys}
     empty_dict["is_valid"] = False
-
-    data = safe_json_loads_plus(json_str)
+    if isinstance(json_str, str):
+        data = safe_json_loads_plus(json_str)
+    else:
+        data = json_str
+        
     if data is None:
         return empty_dict
 

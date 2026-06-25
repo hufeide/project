@@ -15,6 +15,7 @@ from .image_utils import save_image_path
 from .logger import get_logger
 import pandas as pd
 import copy
+import time
 logger = get_logger("unified_inference")
 
 # ===== 配置导入 =====
@@ -366,8 +367,11 @@ class UnifiedModelInference:
         print("工作流: 双模型生成 + 比对")
         
         # 传递函数引用和参数，而不是直接传 awaitable
+        start_time = time.time()
+        
         t1 = asyncio.create_task(self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config))
         t2 = asyncio.create_task(self.safe_call(self._call_model, self.client2, sys_prompt, prompt, image_list, model_name="vllm_model2", config=config))
+        
         
         stage_tasks = [t1, t2]
         try:
@@ -378,13 +382,16 @@ class UnifiedModelInference:
             # 等待一小会儿确保取消动作传播
             await asyncio.gather(*stage_tasks, return_exceptions=True)
             raise
-                
+        end_time = time.time()        
         for result, model_name in first_stage_results:
-            results[f"{model_name}"] = result
+            if result:  # 只有结果不为空才放入字典
+                results[f"{model_name}"] = result
+                results[f"{model_name}"]['all_end_time'] = end_time
+                results[f"{model_name}"]['all_start_time'] = start_time
 
         valid_results = [r for r in results.values() if r['is_valid']]
         comparison_result = {"correct": "", "reason": "", 'is_valid': ""}
-
+        start_time = time.time()
         if len(valid_results) >= 2:
             if is_validated_equal(valid_results[0], valid_results[1], ["answer", "kp_code", "question_type"]):
                 comparison_result['correct'] = "是"
@@ -399,6 +406,10 @@ class UnifiedModelInference:
         else:
             logger.warning("两个模型结果为空，无法进行比对")
             # results["model_judge"] = ""
+            end_time = time.time()
+        end_time = time.time()
+        comparison_result['end_time'] = end_time
+        comparison_result['start_time'] = start_time
         results['comparison_result'] = comparison_result
         return results
     async def _workflow_answer_analysis_single(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
@@ -473,6 +484,7 @@ class UnifiedModelInference:
     async def _workflow_answer_knowledge(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
                                          image_list: List[str], config: TaskConfig) -> Dict[str, str]:
         """知识点判定工作流：任一模型快速判定"""
+        start_time = time.time()
         results = {}
         print("工作流: 知识点判定 - 双模型竞争")
         
@@ -481,6 +493,7 @@ class UnifiedModelInference:
             self.safe_call(self._call_model, self.client1, sys_prompt, prompt, image_list, model_name="vllm_model1", config=config),
         ]
         responses = await asyncio.gather(*tasks, return_exceptions=True)
+        end_time = time.time()
         for response in responses:
             # 检查是否是异常对象（防止程序崩溃）
             if isinstance(response, Exception):
@@ -490,6 +503,8 @@ class UnifiedModelInference:
             result, model_name = response
             if result:  # 只有结果不为空才放入字典
                 results[model_name] = result
+                results[model_name]['end_time'] = end_time
+                results[model_name]['start_time'] = start_time
         return results
 
     async def _workflow_answer_difficulty(self, data: Dict[str, Any], sys_prompt: str, prompt: str, 
@@ -513,7 +528,7 @@ class UnifiedModelInference:
             # 检查是否被取消
             if asyncio.current_task().cancelled():
                 raise asyncio.CancelledError()
-                
+            start_time = time.time()    
             response = await client.chat.completions.create(
                 model="",
                 messages=[
@@ -522,7 +537,14 @@ class UnifiedModelInference:
                 ],
                 **VLLM_DEFAULT_PARAMS,
             )
-            return response.choices[0].message.content
+            end_time = time.time()
+            from json_repair import repair_json
+            result = json.loads(repair_json(response.choices[0].message.content))
+            result['input_tokens'] =  response.usage.prompt_tokens
+            result['output_tokens'] = response.usage.completion_tokens
+            result['start_time'] = start_time
+            result['end_time'] = end_time
+            return result
         except asyncio.CancelledError:
             logger.debug("vLLM 调用被取消")
             raise

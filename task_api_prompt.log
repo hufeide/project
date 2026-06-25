@@ -1,0 +1,1458 @@
+nohup: ignoring input
+2026-06-22 13:50:04,885 INFO [task_analysis] 知识点字典加载成功 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:487]
+2026-06-22 13:50:04,885 - INFO - 知识点字典加载成功
+2026-06-22 13:50:04,885 INFO [task_analysis] 启动定时拉取任务，轮询间隔: 60秒，批次大小: 1，最大等待时间: 10秒 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:569]
+2026-06-22 13:50:04,885 - INFO - 启动定时拉取任务，轮询间隔: 60秒，批次大小: 1，最大等待时间: 10秒
+2026-06-22 13:51:25,471 INFO [task_analysis] 拉取到 6 个新任务，当前待处理: 6 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:576]
+2026-06-22 13:51:25,471 - INFO - 拉取到 6 个新任务，当前待处理: 6
+2026-06-22 13:51:25,473 INFO [task_analysis] 开始处理批次任务，共 6 条 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:531]
+2026-06-22 13:51:25,473 - INFO - 开始处理批次任务，共 6 条
+2026-06-22 13:51:25,473 INFO [task_analysis] 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:547]
+2026-06-22 13:51:25,473 - INFO - 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis
+2026-06-22 13:51:26,546 INFO [task_analysis] 任务组ID 8924 开始处理 6 条数据 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:551]
+2026-06-22 13:51:26,546 - INFO - 任务组ID 8924 开始处理 6 条数据
+2026-06-22 13:51:43,852 INFO [task_analysis] 任务组ID 8924 处理完成，结果: None [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:555]
+2026-06-22 13:51:43,852 - INFO - 任务组ID 8924 处理完成，结果: None
+2026-06-22 14:14:01,564 INFO [task_analysis] 拉取到 6 个新任务，当前待处理: 6 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:576]
+2026-06-22 14:14:01,564 - INFO - 拉取到 6 个新任务，当前待处理: 6
+2026-06-22 14:14:01,564 INFO [task_analysis] 开始处理批次任务，共 6 条 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:531]
+2026-06-22 14:14:01,564 - INFO - 开始处理批次任务，共 6 条
+2026-06-22 14:14:01,565 INFO [task_analysis] 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:547]
+2026-06-22 14:14:01,565 - INFO - 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis
+2026-06-22 14:14:02,023 INFO [task_analysis] 任务组ID 8924 开始处理 6 条数据 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:551]
+2026-06-22 14:14:02,023 - INFO - 任务组ID 8924 开始处理 6 条数据
+2026-06-22 14:14:35,237 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:14:39,853 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:14:57,648 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:14:59,890 - INFO - Retrying request to /chat/completions in 0.433721 seconds
+2026-06-22 14:14:59,896 - INFO - Retrying request to /chat/completions in 0.469523 seconds
+2026-06-22 14:15:47,203 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:15:47,327 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:16:05,142 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:16:07,887 - INFO - Retrying request to /chat/completions in 0.444105 seconds
+2026-06-22 14:16:07,893 - INFO - Retrying request to /chat/completions in 0.472264 seconds
+2026-06-22 14:16:38,065 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:16:39,099 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:16:55,280 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:16:58,707 - INFO - Retrying request to /chat/completions in 0.458714 seconds
+2026-06-22 14:16:58,712 - INFO - Retrying request to /chat/completions in 0.482777 seconds
+2026-06-22 14:17:26,704 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:17:34,499 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:17:47,756 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:17:50,332 - INFO - Retrying request to /chat/completions in 0.452486 seconds
+2026-06-22 14:17:50,338 - INFO - Retrying request to /chat/completions in 0.499516 seconds
+2026-06-22 14:18:17,628 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:18:20,982 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:18:56,307 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:19:32,735 - INFO - Retrying request to /chat/completions in 0.437656 seconds
+2026-06-22 14:19:32,741 - INFO - Retrying request to /chat/completions in 0.454681 seconds
+2026-06-22 14:20:13,453 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:20:19,134 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:20:35,484 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 14:20:45,781 INFO [task_analysis] 任务组ID 8924 处理完成，结果: None [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:555]
+2026-06-22 14:20:45,781 - INFO - 任务组ID 8924 处理完成，结果: None
+2026-06-22 14:28:52,401 INFO [task_analysis] 拉取到 6 个新任务，当前待处理: 6 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:576]
+2026-06-22 14:28:52,401 - INFO - 拉取到 6 个新任务，当前待处理: 6
+2026-06-22 14:28:52,401 INFO [task_analysis] 开始处理批次任务，共 6 条 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:531]
+2026-06-22 14:28:52,401 - INFO - 开始处理批次任务，共 6 条
+2026-06-22 14:28:52,401 INFO [task_analysis] 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:547]
+2026-06-22 14:28:52,401 - INFO - 开始处理任务组ID 8924，共 6 条，任务类型: answer_analysis
+2026-06-22 14:28:52,815 INFO [task_analysis] 任务组ID 8924 开始处理 6 条数据 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:551]
+2026-06-22 14:28:52,815 - INFO - 任务组ID 8924 开始处理 6 条数据
+2026-06-22 14:29:01,558 INFO [task_analysis] 任务组ID 8924 处理完成，结果: None [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:555]
+2026-06-22 14:29:01,558 - INFO - 任务组ID 8924 处理完成，结果: None
+2026-06-22 15:33:25,527 INFO [task_analysis] 拉取到 350 个新任务，当前待处理: 350 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:576]
+2026-06-22 15:33:25,527 - INFO - 拉取到 350 个新任务，当前待处理: 350
+2026-06-22 15:33:25,527 INFO [task_analysis] 开始处理批次任务，共 350 条 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:531]
+2026-06-22 15:33:25,527 - INFO - 开始处理批次任务，共 350 条
+2026-06-22 15:33:25,527 INFO [task_analysis] 开始处理任务组ID 8949，共 350 条，任务类型: answer_correct [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:547]
+2026-06-22 15:33:25,527 - INFO - 开始处理任务组ID 8949，共 350 条，任务类型: answer_correct
+2026-06-22 15:33:25,569 INFO [task_analysis] 任务组ID 8949 开始处理 350 条数据 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:551]
+2026-06-22 15:33:25,569 - INFO - 任务组ID 8949 开始处理 350 条数据
+2026-06-22 15:33:26,618 - INFO - Retrying request to /chat/completions in 0.416415 seconds
+2026-06-22 15:33:46,173 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:33:46,412 - INFO - Retrying request to /chat/completions in 0.379421 seconds
+2026-06-22 15:34:06,966 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:34:07,134 - INFO - Retrying request to /chat/completions in 0.418978 seconds
+2026-06-22 15:34:25,010 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:34:27,366 - INFO - Retrying request to /chat/completions in 0.456552 seconds
+2026-06-22 15:34:42,355 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:34:42,637 - INFO - Retrying request to /chat/completions in 0.392325 seconds
+2026-06-22 15:35:03,880 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:35:04,012 - INFO - Retrying request to /chat/completions in 0.375114 seconds
+2026-06-22 15:35:16,918 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:35:17,058 - INFO - Retrying request to /chat/completions in 0.499135 seconds
+2026-06-22 15:35:38,189 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:35:38,366 - INFO - Retrying request to /chat/completions in 0.386431 seconds
+2026-06-22 15:35:54,653 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:35:54,800 - INFO - Retrying request to /chat/completions in 0.438195 seconds
+2026-06-22 15:36:13,244 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:36:13,411 - INFO - Retrying request to /chat/completions in 0.463099 seconds
+2026-06-22 15:36:43,394 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:36:43,534 - INFO - Retrying request to /chat/completions in 0.483577 seconds
+2026-06-22 15:37:04,894 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:37:05,023 - INFO - Retrying request to /chat/completions in 0.448632 seconds
+2026-06-22 15:37:29,801 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:37:29,985 - INFO - Retrying request to /chat/completions in 0.442121 seconds
+2026-06-22 15:37:58,670 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:37:58,808 - INFO - Retrying request to /chat/completions in 0.444004 seconds
+2026-06-22 15:38:23,022 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:38:23,212 - INFO - Retrying request to /chat/completions in 0.449662 seconds
+2026-06-22 15:39:02,387 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:39:04,443 - INFO - Retrying request to /chat/completions in 0.414563 seconds
+2026-06-22 15:39:24,220 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:39:24,453 - INFO - Retrying request to /chat/completions in 0.491091 seconds
+2026-06-22 15:39:48,815 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:39:48,951 - INFO - Retrying request to /chat/completions in 0.447521 seconds
+2026-06-22 15:40:08,568 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:40:08,815 - INFO - Retrying request to /chat/completions in 0.498120 seconds
+2026-06-22 15:40:30,503 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:40:30,656 - INFO - Retrying request to /chat/completions in 0.385422 seconds
+2026-06-22 15:40:49,279 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:40:49,460 - INFO - Retrying request to /chat/completions in 0.436123 seconds
+2026-06-22 15:41:09,332 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:41:09,553 - INFO - Retrying request to /chat/completions in 0.455746 seconds
+2026-06-22 15:41:32,331 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:41:32,474 - INFO - Retrying request to /chat/completions in 0.499364 seconds
+2026-06-22 15:41:54,728 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:41:54,961 - INFO - Retrying request to /chat/completions in 0.469378 seconds
+2026-06-22 15:42:17,167 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:42:17,344 - INFO - Retrying request to /chat/completions in 0.386197 seconds
+2026-06-22 15:42:36,306 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:42:36,457 - INFO - Retrying request to /chat/completions in 0.382509 seconds
+2026-06-22 15:42:56,612 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:42:56,756 - INFO - Retrying request to /chat/completions in 0.491888 seconds
+2026-06-22 15:43:16,995 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:43:17,177 - INFO - Retrying request to /chat/completions in 0.465704 seconds
+2026-06-22 15:43:38,986 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:43:39,133 - INFO - Retrying request to /chat/completions in 0.401867 seconds
+2026-06-22 15:44:03,108 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:44:03,273 - INFO - Retrying request to /chat/completions in 0.404776 seconds
+2026-06-22 15:44:25,242 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:44:25,534 - INFO - Retrying request to /chat/completions in 0.477024 seconds
+2026-06-22 15:44:55,713 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:44:55,874 - INFO - Retrying request to /chat/completions in 0.454546 seconds
+2026-06-22 15:45:21,309 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:45:21,473 - INFO - Retrying request to /chat/completions in 0.459970 seconds
+2026-06-22 15:45:43,533 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:45:43,683 - INFO - Retrying request to /chat/completions in 0.384963 seconds
+2026-06-22 15:46:07,100 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:46:07,249 - INFO - Retrying request to /chat/completions in 0.491416 seconds
+2026-06-22 15:46:27,928 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:46:28,096 - INFO - Retrying request to /chat/completions in 0.496080 seconds
+2026-06-22 15:46:52,918 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:46:53,118 - INFO - Retrying request to /chat/completions in 0.442990 seconds
+2026-06-22 15:47:10,645 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:47:10,788 - INFO - Retrying request to /chat/completions in 0.471463 seconds
+2026-06-22 15:47:34,735 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:47:38,911 - INFO - Retrying request to /chat/completions in 0.469746 seconds
+2026-06-22 15:47:56,731 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:47:56,873 - INFO - Retrying request to /chat/completions in 0.377749 seconds
+2026-06-22 15:48:15,006 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:48:15,161 - INFO - Retrying request to /chat/completions in 0.447938 seconds
+2026-06-22 15:48:36,555 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:48:36,826 - INFO - Retrying request to /chat/completions in 0.480017 seconds
+2026-06-22 15:49:01,067 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:49:01,355 - INFO - Retrying request to /chat/completions in 0.429233 seconds
+2026-06-22 15:49:22,602 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:49:22,766 - INFO - Retrying request to /chat/completions in 0.478727 seconds
+2026-06-22 15:49:45,065 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:49:45,212 - INFO - Retrying request to /chat/completions in 0.481980 seconds
+2026-06-22 15:50:08,729 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:50:08,888 - INFO - Retrying request to /chat/completions in 0.420661 seconds
+2026-06-22 15:50:30,465 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:50:30,640 - INFO - Retrying request to /chat/completions in 0.456102 seconds
+2026-06-22 15:50:48,681 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:50:48,877 - INFO - Retrying request to /chat/completions in 0.464255 seconds
+2026-06-22 15:51:10,447 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:51:10,584 - INFO - Retrying request to /chat/completions in 0.426781 seconds
+2026-06-22 15:51:25,948 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:51:26,142 - INFO - Retrying request to /chat/completions in 0.448485 seconds
+2026-06-22 15:51:46,847 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:51:47,319 - INFO - Retrying request to /chat/completions in 0.478531 seconds
+2026-06-22 15:52:15,097 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:52:15,271 - INFO - Retrying request to /chat/completions in 0.462209 seconds
+2026-06-22 15:52:35,719 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:52:38,615 - INFO - Retrying request to /chat/completions in 0.394832 seconds
+2026-06-22 15:53:05,268 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:53:05,474 - INFO - Retrying request to /chat/completions in 0.480375 seconds
+2026-06-22 15:53:25,349 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:53:25,544 - INFO - Retrying request to /chat/completions in 0.436616 seconds
+2026-06-22 15:53:43,452 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:53:43,637 - INFO - Retrying request to /chat/completions in 0.494284 seconds
+2026-06-22 15:54:05,627 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:54:05,747 - INFO - Retrying request to /chat/completions in 0.388931 seconds
+2026-06-22 15:54:22,615 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:54:22,756 - INFO - Retrying request to /chat/completions in 0.474337 seconds
+2026-06-22 15:54:42,388 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:54:42,555 - INFO - Retrying request to /chat/completions in 0.478897 seconds
+2026-06-22 15:55:02,734 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:55:02,953 - INFO - Retrying request to /chat/completions in 0.464542 seconds
+2026-06-22 15:55:29,775 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:55:29,959 - INFO - Retrying request to /chat/completions in 0.486252 seconds
+2026-06-22 15:55:49,451 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:55:49,598 - INFO - Retrying request to /chat/completions in 0.408656 seconds
+2026-06-22 15:56:05,945 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:56:06,144 - INFO - Retrying request to /chat/completions in 0.449365 seconds
+2026-06-22 15:56:24,380 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:56:24,559 - INFO - Retrying request to /chat/completions in 0.497309 seconds
+2026-06-22 15:56:49,305 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:56:49,462 - INFO - Retrying request to /chat/completions in 0.475358 seconds
+2026-06-22 15:57:08,843 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:57:09,035 - INFO - Retrying request to /chat/completions in 0.404814 seconds
+2026-06-22 15:57:36,916 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:57:37,094 - INFO - Retrying request to /chat/completions in 0.447307 seconds
+2026-06-22 15:58:05,397 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:58:05,604 - INFO - Retrying request to /chat/completions in 0.462003 seconds
+2026-06-22 15:58:29,364 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:58:29,535 - INFO - Retrying request to /chat/completions in 0.439126 seconds
+2026-06-22 15:58:48,296 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:58:48,458 - INFO - Retrying request to /chat/completions in 0.492730 seconds
+2026-06-22 15:59:15,463 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:59:15,687 - INFO - Retrying request to /chat/completions in 0.493301 seconds
+2026-06-22 15:59:44,454 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 15:59:44,598 - INFO - Retrying request to /chat/completions in 0.403890 seconds
+2026-06-22 16:00:08,764 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:00:08,985 - INFO - Retrying request to /chat/completions in 0.467808 seconds
+2026-06-22 16:00:33,732 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:00:33,888 - INFO - Retrying request to /chat/completions in 0.489204 seconds
+2026-06-22 16:00:57,890 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:00:58,050 - INFO - Retrying request to /chat/completions in 0.379174 seconds
+2026-06-22 16:01:27,897 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:01:28,055 - INFO - Retrying request to /chat/completions in 0.452277 seconds
+2026-06-22 16:01:55,203 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:01:55,361 - INFO - Retrying request to /chat/completions in 0.475861 seconds
+2026-06-22 16:02:21,869 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:02:22,040 - INFO - Retrying request to /chat/completions in 0.421878 seconds
+2026-06-22 16:02:52,529 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:02:52,792 - INFO - Retrying request to /chat/completions in 0.404316 seconds
+2026-06-22 16:03:15,108 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:03:15,251 - INFO - Retrying request to /chat/completions in 0.447477 seconds
+2026-06-22 16:03:39,313 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:03:39,461 - INFO - Retrying request to /chat/completions in 0.478843 seconds
+2026-06-22 16:04:05,129 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:04:05,300 - INFO - Retrying request to /chat/completions in 0.471914 seconds
+2026-06-22 16:04:26,399 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:04:26,579 - INFO - Retrying request to /chat/completions in 0.376370 seconds
+2026-06-22 16:04:50,454 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:04:50,608 - INFO - Retrying request to /chat/completions in 0.499691 seconds
+2026-06-22 16:05:11,224 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:05:11,359 - INFO - Retrying request to /chat/completions in 0.466857 seconds
+2026-06-22 16:05:30,392 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:05:30,603 - INFO - Retrying request to /chat/completions in 0.482315 seconds
+2026-06-22 16:05:54,347 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:05:54,510 - INFO - Retrying request to /chat/completions in 0.393786 seconds
+2026-06-22 16:06:13,041 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:06:13,195 - INFO - Retrying request to /chat/completions in 0.473026 seconds
+2026-06-22 16:06:38,216 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:06:38,355 - INFO - Retrying request to /chat/completions in 0.450214 seconds
+2026-06-22 16:07:02,276 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:07:02,472 - INFO - Retrying request to /chat/completions in 0.443874 seconds
+2026-06-22 16:07:28,770 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:07:28,918 - INFO - Retrying request to /chat/completions in 0.451219 seconds
+2026-06-22 16:07:56,633 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:07:58,474 - INFO - Retrying request to /chat/completions in 0.434245 seconds
+2026-06-22 16:08:24,278 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:08:24,484 - INFO - Retrying request to /chat/completions in 0.480317 seconds
+2026-06-22 16:08:50,339 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:08:50,488 - INFO - Retrying request to /chat/completions in 0.453006 seconds
+2026-06-22 16:09:35,575 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:09:35,721 - INFO - Retrying request to /chat/completions in 0.391205 seconds
+2026-06-22 16:09:57,695 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:09:57,934 - INFO - Retrying request to /chat/completions in 0.442677 seconds
+2026-06-22 16:10:36,159 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:10:37,144 - INFO - Retrying request to /chat/completions in 0.457359 seconds
+2026-06-22 16:11:05,576 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:11:05,711 - INFO - Retrying request to /chat/completions in 0.454939 seconds
+2026-06-22 16:11:32,439 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:11:32,593 - INFO - Retrying request to /chat/completions in 0.467343 seconds
+2026-06-22 16:11:52,814 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:11:52,950 - INFO - Retrying request to /chat/completions in 0.455435 seconds
+2026-06-22 16:12:13,117 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:12:13,265 - INFO - Retrying request to /chat/completions in 0.449259 seconds
+2026-06-22 16:12:50,760 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:12:50,916 - INFO - Retrying request to /chat/completions in 0.455029 seconds
+2026-06-22 16:13:06,763 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:13:06,898 - INFO - Retrying request to /chat/completions in 0.477081 seconds
+2026-06-22 16:13:22,399 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:13:22,610 - INFO - Retrying request to /chat/completions in 0.423282 seconds
+2026-06-22 16:13:39,691 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:13:39,846 - INFO - Retrying request to /chat/completions in 0.445613 seconds
+2026-06-22 16:13:53,068 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:13:53,210 - INFO - Retrying request to /chat/completions in 0.471246 seconds
+2026-06-22 16:14:05,248 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:14:05,379 - INFO - Retrying request to /chat/completions in 0.465334 seconds
+2026-06-22 16:14:18,857 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:14:19,073 - INFO - Retrying request to /chat/completions in 0.422261 seconds
+2026-06-22 16:14:33,303 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:14:33,446 - INFO - Retrying request to /chat/completions in 0.447598 seconds
+2026-06-22 16:14:50,746 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:14:50,895 - INFO - Retrying request to /chat/completions in 0.496764 seconds
+2026-06-22 16:15:04,096 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:15:04,279 - INFO - Retrying request to /chat/completions in 0.431413 seconds
+2026-06-22 16:15:20,263 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:15:20,408 - INFO - Retrying request to /chat/completions in 0.453939 seconds
+2026-06-22 16:15:34,252 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:15:34,378 - INFO - Retrying request to /chat/completions in 0.382471 seconds
+2026-06-22 16:15:49,485 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:15:49,624 - INFO - Retrying request to /chat/completions in 0.460455 seconds
+2026-06-22 16:16:06,966 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:16:07,115 - INFO - Retrying request to /chat/completions in 0.456592 seconds
+2026-06-22 16:16:21,026 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:16:21,217 - INFO - Retrying request to /chat/completions in 0.404417 seconds
+2026-06-22 16:16:38,237 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:16:38,463 - INFO - Retrying request to /chat/completions in 0.413244 seconds
+2026-06-22 16:17:03,847 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:17:04,026 - INFO - Retrying request to /chat/completions in 0.466613 seconds
+2026-06-22 16:17:25,154 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:17:25,310 - INFO - Retrying request to /chat/completions in 0.493876 seconds
+2026-06-22 16:17:42,267 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:17:42,484 - INFO - Retrying request to /chat/completions in 0.403694 seconds
+2026-06-22 16:17:58,444 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:17:58,590 - INFO - Retrying request to /chat/completions in 0.452092 seconds
+2026-06-22 16:18:16,517 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:18:16,685 - INFO - Retrying request to /chat/completions in 0.433225 seconds
+2026-06-22 16:18:32,002 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:18:32,155 - INFO - Retrying request to /chat/completions in 0.474013 seconds
+2026-06-22 16:18:50,544 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:18:50,795 - INFO - Retrying request to /chat/completions in 0.446064 seconds
+2026-06-22 16:19:11,587 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:19:11,721 - INFO - Retrying request to /chat/completions in 0.384994 seconds
+2026-06-22 16:19:30,253 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:19:30,402 - INFO - Retrying request to /chat/completions in 0.394595 seconds
+2026-06-22 16:19:48,296 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:19:48,454 - INFO - Retrying request to /chat/completions in 0.486066 seconds
+2026-06-22 16:20:06,441 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:20:06,581 - INFO - Retrying request to /chat/completions in 0.378368 seconds
+2026-06-22 16:20:31,131 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:20:31,277 - INFO - Retrying request to /chat/completions in 0.473136 seconds
+2026-06-22 16:20:50,960 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:20:51,093 - INFO - Retrying request to /chat/completions in 0.483174 seconds
+2026-06-22 16:21:12,892 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:21:13,042 - INFO - Retrying request to /chat/completions in 0.486404 seconds
+2026-06-22 16:21:34,131 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:21:34,292 - INFO - Retrying request to /chat/completions in 0.474686 seconds
+2026-06-22 16:21:54,816 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:21:54,955 - INFO - Retrying request to /chat/completions in 0.441244 seconds
+2026-06-22 16:22:09,028 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:22:12,386 - INFO - Retrying request to /chat/completions in 0.420264 seconds
+2026-06-22 16:22:29,818 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:22:30,059 - INFO - Retrying request to /chat/completions in 0.451637 seconds
+2026-06-22 16:22:53,503 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:22:53,641 - INFO - Retrying request to /chat/completions in 0.473245 seconds
+2026-06-22 16:23:08,072 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:23:08,220 - INFO - Retrying request to /chat/completions in 0.476308 seconds
+2026-06-22 16:23:22,894 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:23:23,079 - INFO - Retrying request to /chat/completions in 0.434404 seconds
+2026-06-22 16:23:41,376 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:23:41,540 - INFO - Retrying request to /chat/completions in 0.389060 seconds
+2026-06-22 16:23:56,427 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:23:56,582 - INFO - Retrying request to /chat/completions in 0.392187 seconds
+2026-06-22 16:24:17,741 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:24:17,919 - INFO - Retrying request to /chat/completions in 0.460365 seconds
+2026-06-22 16:24:38,550 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:24:38,692 - INFO - Retrying request to /chat/completions in 0.497592 seconds
+2026-06-22 16:25:01,309 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:25:01,473 - INFO - Retrying request to /chat/completions in 0.382738 seconds
+2026-06-22 16:25:21,537 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:25:21,717 - INFO - Retrying request to /chat/completions in 0.440357 seconds
+2026-06-22 16:25:42,029 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:25:42,233 - INFO - Retrying request to /chat/completions in 0.376639 seconds
+2026-06-22 16:26:01,583 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:26:01,735 - INFO - Retrying request to /chat/completions in 0.477359 seconds
+2026-06-22 16:26:20,581 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:26:20,789 - INFO - Retrying request to /chat/completions in 0.453772 seconds
+2026-06-22 16:26:37,364 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:26:37,509 - INFO - Retrying request to /chat/completions in 0.448886 seconds
+2026-06-22 16:26:53,441 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:26:53,592 - INFO - Retrying request to /chat/completions in 0.376062 seconds
+2026-06-22 16:27:05,150 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:27:05,300 - INFO - Retrying request to /chat/completions in 0.376325 seconds
+2026-06-22 16:27:14,185 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:27:14,374 - INFO - Retrying request to /chat/completions in 0.432783 seconds
+2026-06-22 16:27:26,219 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:27:26,381 - INFO - Retrying request to /chat/completions in 0.437656 seconds
+2026-06-22 16:27:41,081 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:27:41,226 - INFO - Retrying request to /chat/completions in 0.431160 seconds
+2026-06-22 16:27:59,052 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:27:59,213 - INFO - Retrying request to /chat/completions in 0.387102 seconds
+2026-06-22 16:28:16,360 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:28:16,543 - INFO - Retrying request to /chat/completions in 0.468766 seconds
+2026-06-22 16:28:29,556 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:28:29,771 - INFO - Retrying request to /chat/completions in 0.424263 seconds
+2026-06-22 16:28:41,419 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:28:41,570 - INFO - Retrying request to /chat/completions in 0.418319 seconds
+2026-06-22 16:28:55,961 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:28:56,145 - INFO - Retrying request to /chat/completions in 0.381976 seconds
+2026-06-22 16:29:08,093 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:29:08,229 - INFO - Retrying request to /chat/completions in 0.433208 seconds
+2026-06-22 16:29:27,484 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:29:27,636 - INFO - Retrying request to /chat/completions in 0.450153 seconds
+2026-06-22 16:29:39,117 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+==================================================
+启动定时拉取任务模式
+学科: 语文
+轮询间隔: 60 秒
+批次大小: 1
+最大等待时间: 10 秒
+==================================================
+工作流: 双模型生成 + 比对
+0
+工作流: 双模型生成 + 比对
+1
+工作流: 双模型生成 + 比对
+2
+工作流: 双模型生成 + 比对
+3
+工作流: 双模型生成 + 比对
+4
+工作流: 双模型生成 + 比对
+5
+工作流: 知识点判定 - 双模型竞争
+0
+工作流: 知识点判定 - 双模型竞争
+1
+工作流: 知识点判定 - 双模型竞争
+2
+工作流: 知识点判定 - 双模型竞争
+3
+工作流: 知识点判定 - 双模型竞争
+4
+工作流: 知识点判定 - 双模型竞争
+5
+工作流: 知识点判定 - 双模型竞争
+6
+工作流: 知识点判定 - 双模型竞争
+7
+工作流: 知识点判定 - 双模型竞争
+8
+工作流: 知识点判定 - 双模型竞争
+9
+工作流: 知识点判定 - 双模型竞争
+10
+工作流: 知识点判定 - 双模型竞争
+11
+工作流: 知识点判定 - 双模型竞争
+12
+工作流: 知识点判定 - 双模型竞争
+13
+工作流: 知识点判定 - 双模型竞争
+14
+工作流: 知识点判定 - 双模型竞争
+15
+工作流: 知识点判定 - 双模型竞争
+16
+工作流: 知识点判定 - 双模型竞争
+17
+工作流: 知识点判定 - 双模型竞争
+18
+工作流: 知识点判定 - 双模型竞争
+19
+工作流: 知识点判定 - 双模型竞争
+20
+工作流: 知识点判定 - 双模型竞争
+21
+工作流: 知识点判定 - 双模型竞争
+22
+工作流: 知识点判定 - 双模型竞争
+23
+工作流: 知识点判定 - 双模型竞争
+24
+工作流: 知识点判定 - 双模型竞争
+25
+工作流: 知识点判定 - 双模型竞争
+26
+工作流: 知识点判定 - 双模型竞争
+27
+工作流: 知识点判定 - 双模型竞争
+28
+工作流: 知识点判定 - 双模型竞争
+29
+工作流: 知识点判定 - 双模型竞争
+30
+工作流: 知识点判定 - 双模型竞争
+31
+工作流: 知识点判定 - 双模型竞争
+32
+工作流: 知识点判定 - 双模型竞争
+33
+工作流: 知识点判定 - 双模型竞争
+34
+工作流: 知识点判定 - 双模型竞争
+35
+工作流: 知识点判定 - 双模型竞争
+36
+工作流: 知识点判定 - 双模型竞争
+37
+工作流: 知识点判定 - 双模型竞争
+38
+工作流: 知识点判定 - 双模型竞争
+39
+工作流: 知识点判定 - 双模型竞争
+40
+工作流: 知识点判定 - 双模型竞争
+41
+工作流: 知识点判定 - 双模型竞争
+42
+工作流: 知识点判定 - 双模型竞争
+43
+工作流: 知识点判定 - 双模型竞争
+44
+工作流: 知识点判定 - 双模型竞争
+45
+工作流: 知识点判定 - 双模型竞争
+46
+工作流: 知识点判定 - 双模型竞争
+47
+工作流: 知识点判定 - 双模型竞争
+48
+工作流: 知识点判定 - 双模型竞争
+49
+工作流: 知识点判定 - 双模型竞争
+50
+工作流: 知识点判定 - 双模型竞争
+51
+工作流: 知识点判定 - 双模型竞争
+52
+工作流: 知识点判定 - 双模型竞争
+53
+工作流: 知识点判定 - 双模型竞争
+54
+工作流: 知识点判定 - 双模型竞争
+55
+工作流: 知识点判定 - 双模型竞争
+56
+工作流: 知识点判定 - 双模型竞争
+57
+工作流: 知识点判定 - 双模型竞争
+58
+工作流: 知识点判定 - 双模型竞争
+59
+工作流: 知识点判定 - 双模型竞争
+60
+工作流: 知识点判定 - 双模型竞争
+61
+工作流: 知识点判定 - 双模型竞争
+62
+工作流: 知识点判定 - 双模型竞争
+63
+工作流: 知识点判定 - 双模型竞争
+64
+工作流: 知识点判定 - 双模型竞争
+65
+工作流: 知识点判定 - 双模型竞争
+66
+工作流: 知识点判定 - 双模型竞争
+67
+工作流: 知识点判定 - 双模型竞争
+68
+工作流: 知识点判定 - 双模型竞争
+69
+工作流: 知识点判定 - 双模型竞争
+70
+工作流: 知识点判定 - 双模型竞争
+71
+工作流: 知识点判定 - 双模型竞争
+72
+工作流: 知识点判定 - 双模型竞争
+73
+工作流: 知识点判定 - 双模型竞争
+74
+工作流: 知识点判定 - 双模型竞争
+75
+工作流: 知识点判定 - 双模型竞争
+76
+工作流: 知识点判定 - 双模型竞争
+77
+工作流: 知识点判定 - 双模型竞争
+78
+工作流: 知识点判定 - 双模型竞争
+79
+工作流: 知识点判定 - 双模型竞争
+80
+工作流: 知识点判定 - 双模型竞争
+81
+工作流: 知识点判定 - 双模型竞争
+82
+工作流: 知识点判定 - 双模型竞争
+83
+工作流: 知识点判定 - 双模型竞争
+84
+工作流: 知识点判定 - 双模型竞争
+85
+工作流: 知识点判定 - 双模型竞争
+86
+工作流: 知识点判定 - 双模型竞争
+87
+工作流: 知识点判定 - 双模型竞争
+88
+工作流: 知识点判定 - 双模型竞争
+89
+工作流: 知识点判定 - 双模型竞争
+90
+工作流: 知识点判定 - 双模型竞争
+91
+工作流: 知识点判定 - 双模型竞争
+92
+工作流: 知识点判定 - 双模型竞争
+93
+工作流: 知识点判定 - 双模型竞争
+94
+工作流: 知识点判定 - 双模型竞争
+95
+工作流: 知识点判定 - 双模型竞争
+96
+工作流: 知识点判定 - 双模型竞争
+97
+工作流: 知识点判定 - 双模型竞争
+98
+工作流: 知识点判定 - 双模型竞争
+99
+工作流: 知识点判定 - 双模型竞争
+100
+工作流: 知识点判定 - 双模型竞争
+101
+工作流: 知识点判定 - 双模型竞争
+102
+工作流: 知识点判定 - 双模型竞争
+103
+工作流: 知识点判定 - 双模型竞争
+104
+工作流: 知识点判定 - 双模型竞争
+105
+工作流: 知识点判定 - 双模型竞争
+106
+工作流: 知识点判定 - 双模型竞争
+107
+工作流: 知识点判定 - 双模型竞争
+108
+工作流: 知识点判定 - 双模型竞争
+109
+工作流: 知识点判定 - 双模型竞争
+110
+工作流: 知识点判定 - 双模型竞争
+111
+工作流: 知识点判定 - 双模型竞争
+112
+工作流: 知识点判定 - 双模型竞争
+113
+工作流: 知识点判定 - 双模型竞争
+114
+工作流: 知识点判定 - 双模型竞争
+115
+工作流: 知识点判定 - 双模型竞争
+116
+工作流: 知识点判定 - 双模型竞争
+117
+工作流: 知识点判定 - 双模型竞争
+118
+工作流: 知识点判定 - 双模型竞争
+119
+工作流: 知识点判定 - 双模型竞争
+120
+工作流: 知识点判定 - 双模型竞争
+121
+工作流: 知识点判定 - 双模型竞争
+122
+工作流: 知识点判定 - 双模型竞争
+123
+工作流: 知识点判定 - 双模型竞争
+124
+工作流: 知识点判定 - 双模型竞争
+125
+工作流: 知识点判定 - 双模型竞争
+126
+工作流: 知识点判定 - 双模型竞争
+127
+工作流: 知识点判定 - 双模型竞争
+128
+工作流: 知识点判定 - 双模型竞争
+129
+工作流: 知识点判定 - 双模型竞争
+130
+工作流: 知识点判定 - 双模型竞争
+131
+工作流: 知识点判定 - 双模型竞争
+132
+工作流: 知识点判定 - 双模型竞争
+133
+工作流: 知识点判定 - 双模型竞争
+134
+工作流: 知识点判定 - 双模型竞争
+135
+工作流: 知识点判定 - 双模型竞争
+136
+工作流: 知识点判定 - 双模型竞争
+137
+工作流: 知识点判定 - 双模型竞争
+138
+工作流: 知识点判定 - 双模型竞争
+139
+工作流: 知识点判定 - 双模型竞争
+140
+工作流: 知识点判定 - 双模型竞争
+141
+工作流: 知识点判定 - 双模型竞争
+142
+工作流: 知识点判定 - 双模型竞争
+143
+工作流: 知识点判定 - 双模型竞争
+144
+工作流: 知识点判定 - 双模型竞争
+145
+工作流: 知识点判定 - 双模型竞争
+146
+工作流: 知识点判定 - 双模型竞争
+147
+工作流: 知识点判定 - 双模型竞争
+148
+工作流: 知识点判定 - 双模型竞争
+149
+工作流: 知识点判定 - 双模型竞争
+150
+工作流: 知识点判定 - 双模型竞争
+151
+工作流: 知识点判定 - 双模型竞争
+152
+工作流: 知识点判定 - 双模型竞争
+153
+工作流: 知识点判定 - 双模型竞争
+154
+工作流: 知识点判定 - 双模型竞争
+155
+工作流: 知识点判定 - 双模型竞争
+156
+工作流: 知识点判定 - 双模型竞争
+157
+工作流: 知识点判定 - 双模型竞争
+158
+工作流: 知识点判定 - 双模型竞争
+159
+2026-06-22 16:29:39,281 - INFO - Retrying request to /chat/completions in 0.386450 seconds
+2026-06-22 16:29:51,781 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:29:51,959 - INFO - Retrying request to /chat/completions in 0.432332 seconds
+2026-06-22 16:30:07,765 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:30:07,979 - INFO - Retrying request to /chat/completions in 0.403810 seconds
+2026-06-22 16:30:23,138 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:30:23,281 - INFO - Retrying request to /chat/completions in 0.453113 seconds
+2026-06-22 16:30:37,904 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:30:38,047 - INFO - Retrying request to /chat/completions in 0.419725 seconds
+2026-06-22 16:30:56,885 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:30:57,037 - INFO - Retrying request to /chat/completions in 0.382215 seconds
+2026-06-22 16:31:12,658 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:31:12,809 - INFO - Retrying request to /chat/completions in 0.411859 seconds
+2026-06-22 16:31:30,988 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:31:31,144 - INFO - Retrying request to /chat/completions in 0.457414 seconds
+2026-06-22 16:31:47,748 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:31:47,894 - INFO - Retrying request to /chat/completions in 0.396605 seconds
+2026-06-22 16:32:03,696 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:32:03,879 - INFO - Retrying request to /chat/completions in 0.432339 seconds
+2026-06-22 16:32:18,361 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:32:18,505 - INFO - Retrying request to /chat/completions in 0.387173 seconds
+2026-06-22 16:32:36,232 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:32:36,370 - INFO - Retrying request to /chat/completions in 0.431816 seconds
+2026-06-22 16:32:50,795 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:32:50,941 - INFO - Retrying request to /chat/completions in 0.384316 seconds
+2026-06-22 16:33:06,779 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:33:06,931 - INFO - Retrying request to /chat/completions in 0.395977 seconds
+2026-06-22 16:33:23,466 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:33:23,688 - INFO - Retrying request to /chat/completions in 0.491555 seconds
+2026-06-22 16:33:38,734 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:33:38,878 - INFO - Retrying request to /chat/completions in 0.488897 seconds
+2026-06-22 16:33:52,793 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:33:52,944 - INFO - Retrying request to /chat/completions in 0.404082 seconds
+2026-06-22 16:34:10,807 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:34:10,948 - INFO - Retrying request to /chat/completions in 0.433858 seconds
+2026-06-22 16:34:31,896 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:34:32,060 - INFO - Retrying request to /chat/completions in 0.471913 seconds
+2026-06-22 16:34:51,124 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:34:51,258 - INFO - Retrying request to /chat/completions in 0.399802 seconds
+2026-06-22 16:35:10,009 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:35:10,173 - INFO - Retrying request to /chat/completions in 0.460519 seconds
+2026-06-22 16:35:30,349 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:35:30,486 - INFO - Retrying request to /chat/completions in 0.395420 seconds
+2026-06-22 16:36:00,831 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:36:01,063 - INFO - Retrying request to /chat/completions in 0.410145 seconds
+2026-06-22 16:36:16,056 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:36:16,213 - INFO - Retrying request to /chat/completions in 0.409180 seconds
+2026-06-22 16:36:28,617 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:36:28,770 - INFO - Retrying request to /chat/completions in 0.450106 seconds
+2026-06-22 16:36:52,344 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:36:52,483 - INFO - Retrying request to /chat/completions in 0.442075 seconds
+2026-06-22 16:37:07,154 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:37:07,302 - INFO - Retrying request to /chat/completions in 0.463915 seconds
+2026-06-22 16:37:24,239 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:37:24,394 - INFO - Retrying request to /chat/completions in 0.454723 seconds
+2026-06-22 16:37:38,945 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:37:39,086 - INFO - Retrying request to /chat/completions in 0.427848 seconds
+2026-06-22 16:37:49,245 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:37:49,385 - INFO - Retrying request to /chat/completions in 0.414002 seconds
+2026-06-22 16:38:17,210 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:38:17,347 - INFO - Retrying request to /chat/completions in 0.481462 seconds
+2026-06-22 16:38:29,519 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:38:29,654 - INFO - Retrying request to /chat/completions in 0.441688 seconds
+2026-06-22 16:38:44,772 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:38:44,917 - INFO - Retrying request to /chat/completions in 0.407347 seconds
+2026-06-22 16:38:59,247 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:38:59,388 - INFO - Retrying request to /chat/completions in 0.400694 seconds
+2026-06-22 16:39:10,772 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:39:10,914 - INFO - Retrying request to /chat/completions in 0.491097 seconds
+2026-06-22 16:39:26,989 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:39:27,137 - INFO - Retrying request to /chat/completions in 0.446340 seconds
+2026-06-22 16:39:43,962 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:39:44,142 - INFO - Retrying request to /chat/completions in 0.460009 seconds
+2026-06-22 16:39:56,086 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:39:56,225 - INFO - Retrying request to /chat/completions in 0.395400 seconds
+2026-06-22 16:40:14,923 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:40:15,086 - INFO - Retrying request to /chat/completions in 0.478680 seconds
+2026-06-22 16:40:31,147 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:40:31,286 - INFO - Retrying request to /chat/completions in 0.395893 seconds
+2026-06-22 16:40:49,211 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:40:49,358 - INFO - Retrying request to /chat/completions in 0.387808 seconds
+2026-06-22 16:41:05,481 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:41:05,617 - INFO - Retrying request to /chat/completions in 0.404535 seconds
+2026-06-22 16:41:23,818 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:41:23,984 - INFO - Retrying request to /chat/completions in 0.430155 seconds
+2026-06-22 16:41:41,991 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:41:42,139 - INFO - Retrying request to /chat/completions in 0.494192 seconds
+2026-06-22 16:41:56,041 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:41:56,239 - INFO - Retrying request to /chat/completions in 0.377976 seconds
+2026-06-22 16:42:12,538 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:42:12,673 - INFO - Retrying request to /chat/completions in 0.486424 seconds
+2026-06-22 16:42:29,850 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:42:29,994 - INFO - Retrying request to /chat/completions in 0.480331 seconds
+2026-06-22 16:42:48,320 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:42:48,461 - INFO - Retrying request to /chat/completions in 0.466716 seconds
+2026-06-22 16:43:02,866 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:43:03,054 - INFO - Retrying request to /chat/completions in 0.487477 seconds
+2026-06-22 16:43:16,059 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:43:16,224 - INFO - Retrying request to /chat/completions in 0.422268 seconds
+2026-06-22 16:43:30,133 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:43:30,269 - INFO - Retrying request to /chat/completions in 0.448942 seconds
+2026-06-22 16:43:50,153 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:43:50,298 - INFO - Retrying request to /chat/completions in 0.398303 seconds
+2026-06-22 16:44:06,902 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:44:07,099 - INFO - Retrying request to /chat/completions in 0.446263 seconds
+2026-06-22 16:44:22,641 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:44:22,781 - INFO - Retrying request to /chat/completions in 0.376720 seconds
+2026-06-22 16:44:41,664 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:44:41,798 - INFO - Retrying request to /chat/completions in 0.422276 seconds
+2026-06-22 16:44:59,995 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:45:00,139 - INFO - Retrying request to /chat/completions in 0.470927 seconds
+2026-06-22 16:45:17,020 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:45:17,157 - INFO - Retrying request to /chat/completions in 0.454311 seconds
+2026-06-22 16:45:36,713 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:45:36,873 - INFO - Retrying request to /chat/completions in 0.447871 seconds
+2026-06-22 16:45:54,250 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:45:54,467 - INFO - Retrying request to /chat/completions in 0.468524 seconds
+2026-06-22 16:46:11,755 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:46:11,889 - INFO - Retrying request to /chat/completions in 0.493301 seconds
+2026-06-22 16:46:34,640 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:46:34,774 - INFO - Retrying request to /chat/completions in 0.451537 seconds
+2026-06-22 16:46:51,734 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:46:51,874 - INFO - Retrying request to /chat/completions in 0.441134 seconds
+2026-06-22 16:47:10,133 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:47:10,274 - INFO - Retrying request to /chat/completions in 0.382784 seconds
+2026-06-22 16:47:28,974 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:47:29,126 - INFO - Retrying request to /chat/completions in 0.419626 seconds
+2026-06-22 16:47:43,469 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:47:43,597 - INFO - Retrying request to /chat/completions in 0.433492 seconds
+2026-06-22 16:48:00,691 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:48:00,924 - INFO - Retrying request to /chat/completions in 0.467551 seconds
+2026-06-22 16:48:16,874 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:48:17,062 - INFO - Retrying request to /chat/completions in 0.384136 seconds
+2026-06-22 16:48:39,190 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:48:39,337 - INFO - Retrying request to /chat/completions in 0.475880 seconds
+2026-06-22 16:49:07,209 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:49:07,349 - INFO - Retrying request to /chat/completions in 0.469651 seconds
+2026-06-22 16:49:24,056 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:49:24,220 - INFO - Retrying request to /chat/completions in 0.489069 seconds
+2026-06-22 16:49:43,302 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:49:43,444 - INFO - Retrying request to /chat/completions in 0.434364 seconds
+2026-06-22 16:50:05,972 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:50:06,170 - INFO - Retrying request to /chat/completions in 0.472971 seconds
+2026-06-22 16:50:24,782 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:50:25,037 - INFO - Retrying request to /chat/completions in 0.425716 seconds
+2026-06-22 16:50:41,391 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:50:41,570 - INFO - Retrying request to /chat/completions in 0.454376 seconds
+2026-06-22 16:51:10,036 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:51:10,178 - INFO - Retrying request to /chat/completions in 0.486383 seconds
+2026-06-22 16:51:31,901 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:51:32,048 - INFO - Retrying request to /chat/completions in 0.454825 seconds
+2026-06-22 16:51:49,443 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:51:49,605 - INFO - Retrying request to /chat/completions in 0.486031 seconds
+2026-06-22 16:52:07,148 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:52:07,341 - INFO - Retrying request to /chat/completions in 0.462127 seconds
+2026-06-22 16:52:27,961 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:52:28,121 - INFO - Retrying request to /chat/completions in 0.376517 seconds
+2026-06-22 16:52:46,500 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:52:46,643 - INFO - Retrying request to /chat/completions in 0.450380 seconds
+2026-06-22 16:53:11,287 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:53:11,560 - INFO - Retrying request to /chat/completions in 0.379172 seconds
+2026-06-22 16:53:33,746 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:53:33,892 - INFO - Retrying request to /chat/completions in 0.377435 seconds
+2026-06-22 16:53:55,586 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:53:55,738 - INFO - Retrying request to /chat/completions in 0.388268 seconds
+2026-06-22 16:54:11,441 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:54:11,597 - INFO - Retrying request to /chat/completions in 0.383866 seconds
+2026-06-22 16:54:35,603 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:54:35,748 - INFO - Retrying request to /chat/completions in 0.444314 seconds
+2026-06-22 16:54:58,747 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:54:58,892 - INFO - Retrying request to /chat/completions in 0.452352 seconds
+2026-06-22 16:55:15,790 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:55:15,943 - INFO - Retrying request to /chat/completions in 0.474638 seconds
+2026-06-22 16:55:41,546 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:55:41,698 - INFO - Retrying request to /chat/completions in 0.385727 seconds
+2026-06-22 16:56:01,063 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:56:01,220 - INFO - Retrying request to /chat/completions in 0.470281 seconds
+2026-06-22 16:56:21,759 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:56:21,914 - INFO - Retrying request to /chat/completions in 0.444975 seconds
+2026-06-22 16:56:48,695 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:56:48,852 - INFO - Retrying request to /chat/completions in 0.447887 seconds
+2026-06-22 16:57:04,780 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:57:04,918 - INFO - Retrying request to /chat/completions in 0.429067 seconds
+2026-06-22 16:57:25,852 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:57:26,003 - INFO - Retrying request to /chat/completions in 0.440830 seconds
+2026-06-22 16:57:47,976 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:57:48,138 - INFO - Retrying request to /chat/completions in 0.469852 seconds
+2026-06-22 16:58:03,814 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:58:03,954 - INFO - Retrying request to /chat/completions in 0.421605 seconds
+2026-06-22 16:58:22,430 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:58:22,586 - INFO - Retrying request to /chat/completions in 0.405132 seconds
+2026-06-22 16:58:44,430 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:58:44,590 - INFO - Retrying request to /chat/completions in 0.484846 seconds
+2026-06-22 16:59:06,390 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:59:06,527 - INFO - Retrying request to /chat/completions in 0.476095 seconds
+2026-06-22 16:59:29,971 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:59:30,157 - INFO - Retrying request to /chat/completions in 0.428806 seconds
+2026-06-22 16:59:53,208 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 16:59:53,371 - INFO - Retrying request to /chat/completions in 0.465169 seconds
+2026-06-22 17:00:15,975 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:00:16,163 - INFO - Retrying request to /chat/completions in 0.409188 seconds
+2026-06-22 17:00:44,755 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:00:44,966 - INFO - Retrying request to /chat/completions in 0.407889 seconds
+2026-06-22 17:01:09,862 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:01:10,007 - INFO - Retrying request to /chat/completions in 0.393750 seconds
+2026-06-22 17:01:32,067 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:01:32,298 - INFO - Retrying request to /chat/completions in 0.426866 seconds
+2026-06-22 17:01:59,716 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:01:59,867 - INFO - Retrying request to /chat/completions in 0.416985 seconds
+2026-06-22 17:02:24,449 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:02:24,639 - INFO - Retrying request to /chat/completions in 0.398206 seconds
+2026-06-22 17:03:04,582 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:03:04,733 - INFO - Retrying request to /chat/completions in 0.433613 seconds
+2026-06-22 17:03:41,358 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:03:41,511 - INFO - Retrying request to /chat/completions in 0.461479 seconds
+2026-06-22 17:04:06,741 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:04:06,903 - INFO - Retrying request to /chat/completions in 0.442892 seconds
+2026-06-22 17:04:25,292 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:04:25,432 - INFO - Retrying request to /chat/completions in 0.471478 seconds
+2026-06-22 17:04:37,912 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:04:38,042 - INFO - Retrying request to /chat/completions in 0.414172 seconds
+2026-06-22 17:04:54,682 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:04:54,819 - INFO - Retrying request to /chat/completions in 0.436132 seconds
+2026-06-22 17:05:08,408 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:05:08,548 - INFO - Retrying request to /chat/completions in 0.378176 seconds
+2026-06-22 17:05:24,837 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:05:24,993 - INFO - Retrying request to /chat/completions in 0.396297 seconds
+2026-06-22 17:05:39,029 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:05:39,203 - INFO - Retrying request to /chat/completions in 0.479000 seconds
+2026-06-22 17:05:53,792 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:05:53,932 - INFO - Retrying request to /chat/completions in 0.399832 seconds
+2026-06-22 17:06:07,594 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:06:07,747 - INFO - Retrying request to /chat/completions in 0.478223 seconds
+2026-06-22 17:06:24,545 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:06:24,789 - INFO - Retrying request to /chat/completions in 0.448979 seconds
+2026-06-22 17:06:37,642 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:06:37,778 - INFO - Retrying request to /chat/completions in 0.399953 seconds
+2026-06-22 17:06:54,053 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:06:54,206 - INFO - Retrying request to /chat/completions in 0.498523 seconds
+2026-06-22 17:07:10,836 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:07:10,970 - INFO - Retrying request to /chat/completions in 0.413113 seconds
+2026-06-22 17:07:24,782 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:07:24,921 - INFO - Retrying request to /chat/completions in 0.480871 seconds
+2026-06-22 17:07:39,951 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:07:40,077 - INFO - Retrying request to /chat/completions in 0.432871 seconds
+2026-06-22 17:07:54,816 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:07:54,965 - INFO - Retrying request to /chat/completions in 0.447850 seconds
+2026-06-22 17:08:14,003 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:08:14,144 - INFO - Retrying request to /chat/completions in 0.473011 seconds
+2026-06-22 17:08:33,468 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:08:33,611 - INFO - Retrying request to /chat/completions in 0.460088 seconds
+2026-06-22 17:08:50,499 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:08:50,641 - INFO - Retrying request to /chat/completions in 0.490121 seconds
+2026-06-22 17:09:09,647 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:09:09,853 - INFO - Retrying request to /chat/completions in 0.408071 seconds
+2026-06-22 17:09:28,152 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:09:28,290 - INFO - Retrying request to /chat/completions in 0.439894 seconds
+2026-06-22 17:09:45,237 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:09:45,380 - INFO - Retrying request to /chat/completions in 0.379741 seconds
+2026-06-22 17:10:06,283 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:10:06,417 - INFO - Retrying request to /chat/completions in 0.418716 seconds
+2026-06-22 17:10:24,089 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:10:24,228 - INFO - Retrying request to /chat/completions in 0.384481 seconds
+2026-06-22 17:10:39,723 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:10:39,863 - INFO - Retrying request to /chat/completions in 0.463249 seconds
+2026-06-22 17:10:56,127 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:10:56,279 - INFO - Retrying request to /chat/completions in 0.401824 seconds
+2026-06-22 17:11:12,459 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:11:14,396 - INFO - Retrying request to /chat/completions in 0.383595 seconds
+2026-06-22 17:11:32,646 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:11:32,785 - INFO - Retrying request to /chat/completions in 0.390141 seconds
+2026-06-22 17:11:50,081 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:11:50,218 - INFO - Retrying request to /chat/completions in 0.432990 seconds
+2026-06-22 17:12:05,847 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:12:05,983 - INFO - Retrying request to /chat/completions in 0.474318 seconds
+2026-06-22 17:12:19,740 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:12:19,957 - INFO - Retrying request to /chat/completions in 0.442980 seconds
+2026-06-22 17:12:40,612 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:12:40,770 - INFO - Retrying request to /chat/completions in 0.486219 seconds
+2026-06-22 17:12:54,497 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:12:54,658 - INFO - Retrying request to /chat/completions in 0.397705 seconds
+2026-06-22 17:13:12,790 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:13:12,931 - INFO - Retrying request to /chat/completions in 0.422029 seconds
+2026-06-22 17:13:27,367 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:13:27,520 - INFO - Retrying request to /chat/completions in 0.384611 seconds
+2026-06-22 17:13:45,833 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:13:46,022 - INFO - Retrying request to /chat/completions in 0.406912 seconds
+2026-06-22 17:14:06,492 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:14:06,637 - INFO - Retrying request to /chat/completions in 0.470921 seconds
+2026-06-22 17:14:21,495 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:14:21,642 - INFO - Retrying request to /chat/completions in 0.376611 seconds
+2026-06-22 17:14:37,297 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:14:37,517 - INFO - Retrying request to /chat/completions in 0.464532 seconds
+2026-06-22 17:14:52,755 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:14:52,959 - INFO - Retrying request to /chat/completions in 0.489315 seconds
+2026-06-22 17:15:02,643 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:15:02,784 - INFO - Retrying request to /chat/completions in 0.464422 seconds
+2026-06-22 17:15:18,528 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:15:18,671 - INFO - Retrying request to /chat/completions in 0.414419 seconds
+2026-06-22 17:15:32,746 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:15:32,883 - INFO - Retrying request to /chat/completions in 0.392525 seconds
+2026-06-22 17:15:48,418 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:15:48,557 - INFO - Retrying request to /chat/completions in 0.437265 seconds
+2026-06-22 17:16:06,939 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:16:07,098 - INFO - Retrying request to /chat/completions in 0.461004 seconds
+2026-06-22 17:16:25,459 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:16:25,619 - INFO - Retrying request to /chat/completions in 0.427859 seconds
+2026-06-22 17:16:56,674 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:16:56,838 - INFO - Retrying request to /chat/completions in 0.434664 seconds
+2026-06-22 17:17:11,300 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:17:11,447 - INFO - Retrying request to /chat/completions in 0.495726 seconds
+2026-06-22 17:17:29,487 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:17:29,640 - INFO - Retrying request to /chat/completions in 0.459022 seconds
+2026-06-22 17:17:53,711 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:17:53,866 - INFO - Retrying request to /chat/completions in 0.410322 seconds
+2026-06-22 17:18:13,462 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:18:13,613 - INFO - Retrying request to /chat/completions in 0.439838 seconds
+2026-06-22 17:18:34,458 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:18:34,598 - INFO - Retrying request to /chat/completions in 0.424876 seconds
+2026-06-22 17:18:50,281 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:18:50,424 - INFO - Retrying request to /chat/completions in 0.470245 seconds
+2026-06-22 17:19:08,388 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:19:08,536 - INFO - Retrying request to /chat/completions in 0.484039 seconds
+2026-06-22 17:19:28,369 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:19:28,513 - INFO - Retrying request to /chat/completions in 0.491407 seconds
+2026-06-22 17:19:46,400 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:19:46,538 - INFO - Retrying request to /chat/completions in 0.406203 seconds
+2026-06-22 17:20:10,628 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:20:10,887 - INFO - Retrying request to /chat/completions in 0.382043 seconds
+2026-06-22 17:20:27,464 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:20:27,612 - INFO - Retrying request to /chat/completions in 0.405550 seconds
+2026-06-22 17:20:45,804 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:20:45,947 - INFO - Retrying request to /chat/completions in 0.384514 seconds
+2026-06-22 17:21:06,234 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+工作流: 知识点判定 - 双模型竞争
+160
+工作流: 知识点判定 - 双模型竞争
+161
+工作流: 知识点判定 - 双模型竞争
+162
+工作流: 知识点判定 - 双模型竞争
+163
+工作流: 知识点判定 - 双模型竞争
+164
+工作流: 知识点判定 - 双模型竞争
+165
+工作流: 知识点判定 - 双模型竞争
+166
+工作流: 知识点判定 - 双模型竞争
+167
+工作流: 知识点判定 - 双模型竞争
+168
+工作流: 知识点判定 - 双模型竞争
+169
+工作流: 知识点判定 - 双模型竞争
+170
+工作流: 知识点判定 - 双模型竞争
+171
+工作流: 知识点判定 - 双模型竞争
+172
+工作流: 知识点判定 - 双模型竞争
+173
+工作流: 知识点判定 - 双模型竞争
+174
+工作流: 知识点判定 - 双模型竞争
+175
+工作流: 知识点判定 - 双模型竞争
+176
+工作流: 知识点判定 - 双模型竞争
+177
+工作流: 知识点判定 - 双模型竞争
+178
+工作流: 知识点判定 - 双模型竞争
+179
+工作流: 知识点判定 - 双模型竞争
+180
+工作流: 知识点判定 - 双模型竞争
+181
+工作流: 知识点判定 - 双模型竞争
+182
+工作流: 知识点判定 - 双模型竞争
+183
+工作流: 知识点判定 - 双模型竞争
+184
+工作流: 知识点判定 - 双模型竞争
+185
+工作流: 知识点判定 - 双模型竞争
+186
+工作流: 知识点判定 - 双模型竞争
+187
+工作流: 知识点判定 - 双模型竞争
+188
+工作流: 知识点判定 - 双模型竞争
+189
+工作流: 知识点判定 - 双模型竞争
+190
+工作流: 知识点判定 - 双模型竞争
+191
+工作流: 知识点判定 - 双模型竞争
+192
+工作流: 知识点判定 - 双模型竞争
+193
+工作流: 知识点判定 - 双模型竞争
+194
+工作流: 知识点判定 - 双模型竞争
+195
+工作流: 知识点判定 - 双模型竞争
+196
+工作流: 知识点判定 - 双模型竞争
+197
+工作流: 知识点判定 - 双模型竞争
+198
+工作流: 知识点判定 - 双模型竞争
+199
+工作流: 知识点判定 - 双模型竞争
+200
+工作流: 知识点判定 - 双模型竞争
+201
+工作流: 知识点判定 - 双模型竞争
+202
+工作流: 知识点判定 - 双模型竞争
+203
+工作流: 知识点判定 - 双模型竞争
+204
+工作流: 知识点判定 - 双模型竞争
+205
+工作流: 知识点判定 - 双模型竞争
+206
+工作流: 知识点判定 - 双模型竞争
+207
+工作流: 知识点判定 - 双模型竞争
+208
+工作流: 知识点判定 - 双模型竞争
+209
+工作流: 知识点判定 - 双模型竞争
+210
+工作流: 知识点判定 - 双模型竞争
+211
+工作流: 知识点判定 - 双模型竞争
+212
+工作流: 知识点判定 - 双模型竞争
+213
+工作流: 知识点判定 - 双模型竞争
+214
+工作流: 知识点判定 - 双模型竞争
+215
+工作流: 知识点判定 - 双模型竞争
+216
+工作流: 知识点判定 - 双模型竞争
+217
+工作流: 知识点判定 - 双模型竞争
+218
+工作流: 知识点判定 - 双模型竞争
+219
+工作流: 知识点判定 - 双模型竞争
+220
+工作流: 知识点判定 - 双模型竞争
+221
+工作流: 知识点判定 - 双模型竞争
+222
+工作流: 知识点判定 - 双模型竞争
+223
+工作流: 知识点判定 - 双模型竞争
+224
+工作流: 知识点判定 - 双模型竞争
+225
+工作流: 知识点判定 - 双模型竞争
+226
+工作流: 知识点判定 - 双模型竞争
+227
+工作流: 知识点判定 - 双模型竞争
+228
+工作流: 知识点判定 - 双模型竞争
+229
+工作流: 知识点判定 - 双模型竞争
+230
+工作流: 知识点判定 - 双模型竞争
+231
+工作流: 知识点判定 - 双模型竞争
+232
+工作流: 知识点判定 - 双模型竞争
+233
+工作流: 知识点判定 - 双模型竞争
+234
+工作流: 知识点判定 - 双模型竞争
+235
+工作流: 知识点判定 - 双模型竞争
+236
+工作流: 知识点判定 - 双模型竞争
+237
+工作流: 知识点判定 - 双模型竞争
+238
+工作流: 知识点判定 - 双模型竞争
+239
+工作流: 知识点判定 - 双模型竞争
+240
+工作流: 知识点判定 - 双模型竞争
+241
+工作流: 知识点判定 - 双模型竞争
+242
+工作流: 知识点判定 - 双模型竞争
+243
+工作流: 知识点判定 - 双模型竞争
+244
+工作流: 知识点判定 - 双模型竞争
+245
+工作流: 知识点判定 - 双模型竞争
+246
+工作流: 知识点判定 - 双模型竞争
+247
+工作流: 知识点判定 - 双模型竞争
+248
+工作流: 知识点判定 - 双模型竞争
+249
+工作流: 知识点判定 - 双模型竞争
+250
+工作流: 知识点判定 - 双模型竞争
+251
+工作流: 知识点判定 - 双模型竞争
+252
+工作流: 知识点判定 - 双模型竞争
+253
+工作流: 知识点判定 - 双模型竞争
+254
+工作流: 知识点判定 - 双模型竞争
+255
+工作流: 知识点判定 - 双模型竞争
+256
+工作流: 知识点判定 - 双模型竞争
+257
+工作流: 知识点判定 - 双模型竞争
+258
+工作流: 知识点判定 - 双模型竞争
+259
+工作流: 知识点判定 - 双模型竞争
+260
+工作流: 知识点判定 - 双模型竞争
+261
+工作流: 知识点判定 - 双模型竞争
+262
+工作流: 知识点判定 - 双模型竞争
+263
+工作流: 知识点判定 - 双模型竞争
+264
+工作流: 知识点判定 - 双模型竞争
+265
+工作流: 知识点判定 - 双模型竞争
+266
+工作流: 知识点判定 - 双模型竞争
+267
+工作流: 知识点判定 - 双模型竞争
+268
+工作流: 知识点判定 - 双模型竞争
+269
+工作流: 知识点判定 - 双模型竞争
+270
+工作流: 知识点判定 - 双模型竞争
+271
+工作流: 知识点判定 - 双模型竞争
+272
+工作流: 知识点判定 - 双模型竞争
+273
+工作流: 知识点判定 - 双模型竞争
+274
+工作流: 知识点判定 - 双模型竞争
+275
+工作流: 知识点判定 - 双模型竞争
+276
+工作流: 知识点判定 - 双模型竞争
+277
+工作流: 知识点判定 - 双模型竞争
+278
+工作流: 知识点判定 - 双模型竞争
+279
+工作流: 知识点判定 - 双模型竞争
+280
+工作流: 知识点判定 - 双模型竞争
+281
+工作流: 知识点判定 - 双模型竞争
+282
+工作流: 知识点判定 - 双模型竞争
+283
+工作流: 知识点判定 - 双模型竞争
+284
+工作流: 知识点判定 - 双模型竞争
+285
+工作流: 知识点判定 - 双模型竞争
+286
+工作流: 知识点判定 - 双模型竞争
+287
+工作流: 知识点判定 - 双模型竞争
+288
+工作流: 知识点判定 - 双模型竞争
+289
+工作流: 知识点判定 - 双模型竞争
+290
+工作流: 知识点判定 - 双模型竞争
+291
+工作流: 知识点判定 - 双模型竞争
+292
+工作流: 知识点判定 - 双模型竞争
+293
+工作流: 知识点判定 - 双模型竞争
+294
+工作流: 知识点判定 - 双模型竞争
+295
+工作流: 知识点判定 - 双模型竞争
+296
+工作流: 知识点判定 - 双模型竞争
+297
+工作流: 知识点判定 - 双模型竞争
+298
+工作流: 知识点判定 - 双模型竞争
+299
+工作流: 知识点判定 - 双模型竞争
+300
+工作流: 知识点判定 - 双模型竞争
+301
+工作流: 知识点判定 - 双模型竞争
+302
+工作流: 知识点判定 - 双模型竞争
+303
+工作流: 知识点判定 - 双模型竞争
+304
+工作流: 知识点判定 - 双模型竞争
+305
+工作流: 知识点判定 - 双模型竞争
+306
+工作流: 知识点判定 - 双模型竞争
+307
+工作流: 知识点判定 - 双模型竞争
+308
+工作流: 知识点判定 - 双模型竞争
+309
+工作流: 知识点判定 - 双模型竞争
+310
+工作流: 知识点判定 - 双模型竞争
+311
+工作流: 知识点判定 - 双模型竞争
+312
+工作流: 知识点判定 - 双模型竞争
+313
+工作流: 知识点判定 - 双模型竞争
+314
+工作流: 知识点判定 - 双模型竞争
+315
+工作流: 知识点判定 - 双模型竞争
+316
+工作流: 知识点判定 - 双模型竞争
+317
+工作流: 知识点判定 - 双模型竞争
+318
+工作流: 知识点判定 - 双模型竞争
+319
+工作流: 知识点判定 - 双模型竞争
+320
+工作流: 知识点判定 - 双模型竞争
+321
+工作流: 知识点判定 - 双模型竞争
+322
+工作流: 知识点判定 - 双模型竞争
+323
+工作流: 知识点判定 - 双模型竞争
+324
+工作流: 知识点判定 - 双模型竞争
+325
+工作流: 知识点判定 - 双模型竞争
+326
+2026-06-22 17:21:06,376 - INFO - Retrying request to /chat/completions in 0.406036 seconds
+2026-06-22 17:21:26,651 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:21:26,806 - INFO - Retrying request to /chat/completions in 0.401568 seconds
+2026-06-22 17:21:53,501 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:21:53,705 - INFO - Retrying request to /chat/completions in 0.420862 seconds
+2026-06-22 17:22:14,257 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:22:14,437 - INFO - Retrying request to /chat/completions in 0.409734 seconds
+2026-06-22 17:22:30,692 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:22:30,859 - INFO - Retrying request to /chat/completions in 0.447949 seconds
+2026-06-22 17:22:50,393 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:22:50,635 - INFO - Retrying request to /chat/completions in 0.477167 seconds
+2026-06-22 17:23:14,986 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:23:15,130 - INFO - Retrying request to /chat/completions in 0.375020 seconds
+2026-06-22 17:23:44,912 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:23:45,062 - INFO - Retrying request to /chat/completions in 0.388907 seconds
+2026-06-22 17:23:58,767 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:23:58,934 - INFO - Retrying request to /chat/completions in 0.497137 seconds
+2026-06-22 17:24:15,590 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:24:15,741 - INFO - Retrying request to /chat/completions in 0.480363 seconds
+2026-06-22 17:24:35,655 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:24:35,858 - INFO - Retrying request to /chat/completions in 0.441064 seconds
+2026-06-22 17:24:53,763 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:24:53,924 - INFO - Retrying request to /chat/completions in 0.457476 seconds
+2026-06-22 17:25:28,584 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:25:28,742 - INFO - Retrying request to /chat/completions in 0.385305 seconds
+2026-06-22 17:25:49,627 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:25:49,765 - INFO - Retrying request to /chat/completions in 0.468872 seconds
+2026-06-22 17:26:06,945 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:26:07,094 - INFO - Retrying request to /chat/completions in 0.410090 seconds
+2026-06-22 17:26:26,310 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:26:26,450 - INFO - Retrying request to /chat/completions in 0.405345 seconds
+2026-06-22 17:26:45,264 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:26:45,424 - INFO - Retrying request to /chat/completions in 0.436515 seconds
+2026-06-22 17:27:08,403 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:27:08,547 - INFO - Retrying request to /chat/completions in 0.462327 seconds
+2026-06-22 17:27:23,624 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:27:23,814 - INFO - Retrying request to /chat/completions in 0.487128 seconds
+2026-06-22 17:27:43,105 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:27:43,253 - INFO - Retrying request to /chat/completions in 0.400857 seconds
+2026-06-22 17:28:01,355 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:28:01,498 - INFO - Retrying request to /chat/completions in 0.375075 seconds
+2026-06-22 17:28:16,858 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:28:16,994 - INFO - Retrying request to /chat/completions in 0.487488 seconds
+2026-06-22 17:28:40,434 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:28:40,572 - INFO - Retrying request to /chat/completions in 0.478178 seconds
+2026-06-22 17:28:58,662 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:28:58,789 INFO [task_analysis] 任务组ID 8949 处理完成，结果: None [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:555]
+2026-06-22 17:28:58,789 - INFO - 任务组ID 8949 处理完成，结果: None
+2026-06-22 17:37:45,635 INFO [task_analysis] 拉取到 1 个新任务，当前待处理: 1 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:576]
+2026-06-22 17:37:45,635 - INFO - 拉取到 1 个新任务，当前待处理: 1
+2026-06-22 17:37:45,636 INFO [task_analysis] 开始处理批次任务，共 1 条 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:531]
+2026-06-22 17:37:45,636 - INFO - 开始处理批次任务，共 1 条
+2026-06-22 17:37:45,636 INFO [task_analysis] 开始处理任务组ID 8950，共 1 条，任务类型: answer_knowledge [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:547]
+2026-06-22 17:37:45,636 - INFO - 开始处理任务组ID 8950，共 1 条，任务类型: answer_knowledge
+2026-06-22 17:37:45,672 INFO [task_analysis] 任务组ID 8950 开始处理 1 条数据 [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:551]
+2026-06-22 17:37:45,672 - INFO - 任务组ID 8950 开始处理 1 条数据
+2026-06-22 17:37:45,697 - INFO - Retrying request to /chat/completions in 0.440360 seconds
+2026-06-22 17:38:23,478 - INFO - HTTP Request: POST http://192.168.1.159:21000/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-22 17:38:23,666 INFO [task_analysis] 任务组ID 8950 处理完成，结果: None [/data/weidu_new/code_25/0703/dfjg_chinese_rec_v1/Template/exam_item_analysis/project/core/task_api_prompt.py:555]
+2026-06-22 17:38:23,666 - INFO - 任务组ID 8950 处理完成，结果: None

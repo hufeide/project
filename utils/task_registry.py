@@ -22,7 +22,7 @@ ANSWER_ANALYSIS_CONFIG = TaskConfig(
 KNOWLEDGE_JUDGMENT_CONFIG = TaskConfig(
     name="answer_knowledge",
     prompt_generator=prompt_answer_knowledge,  # 暂时复用，后续可单独实现
-    required_keys={"kp_code", "kp","reason","human_correct"},
+    required_keys={"kp_code", "kp","question_type","reason","human_correct"},
     model_selection="vllm",
     use_images=True
 )
